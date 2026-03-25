@@ -2,6 +2,124 @@
    kennyy Dashboard – Full API Integration
 ======================================== */
 
+// ── i18n (Internationalisation) ──
+const AVAILABLE_LOCALES = ['pt','en','es','fr','it','ja','pt-pt','ru','tr'];
+const DEFAULT_LOCALE = 'en';
+let _i18nStrings = {};
+let _currentLocale = localStorage.getItem('kennyy_locale') || null;
+
+async function loadLocale(code) {
+  try {
+    const res = await fetch(`locales/${code}.json`);
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } catch {
+    // fallback to English
+    if (code !== DEFAULT_LOCALE) return loadLocale(DEFAULT_LOCALE);
+    return {};
+  }
+}
+
+function t(key, vars) {
+  const parts = key.split('.');
+  let val = _i18nStrings;
+  for (const p of parts) {
+    if (val && typeof val === 'object') val = val[p];
+    else { val = undefined; break; }
+  }
+  if (typeof val !== 'string') return key;
+  if (vars) {
+    return val.replace(/\{(\w+)\}/g, (_, k) => vars[k] !== undefined ? vars[k] : `{${k}}`);
+  }
+  return val;
+}
+
+function applyTranslations() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    const translated = t(key);
+    if (translated !== key) el.textContent = translated;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    const translated = t(key);
+    if (translated !== key) el.setAttribute('placeholder', translated);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    const translated = t(key);
+    if (translated !== key) el.setAttribute('title', translated);
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria');
+    const translated = t(key);
+    if (translated !== key) el.setAttribute('aria-label', translated);
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    const translated = t(key);
+    if (translated !== key) el.innerHTML = translated;
+  });
+}
+
+async function setLocale(code) {
+  _currentLocale = code;
+  localStorage.setItem('kennyy_locale', code);
+  _i18nStrings = await loadLocale(code);
+  applyTranslations();
+  // Highlight active language in picker
+  document.querySelectorAll('.lang-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.locale === code);
+  });
+}
+
+function showLanguagePrompt() {
+  const overlay = document.getElementById('lang-modal');
+  if (overlay) overlay.classList.remove('hidden');
+  // Highlight active theme
+  const current = document.documentElement.getAttribute('data-theme') || 'default';
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === current);
+  });
+}
+
+function hideLanguagePrompt() {
+  const overlay = document.getElementById('lang-modal');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+function setTheme(id) {
+  if (id === 'default') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', id);
+  }
+  localStorage.setItem('kennyy_theme', id);
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === id);
+  });
+}
+
+function initTheme() {
+  const saved = localStorage.getItem('kennyy_theme');
+  if (saved && saved !== 'default') {
+    document.documentElement.setAttribute('data-theme', saved);
+  }
+}
+
+async function initI18n() {
+  initTheme();
+  if (!_currentLocale) {
+    // First visit — show prompt, default to English until they choose
+    _i18nStrings = await loadLocale(DEFAULT_LOCALE);
+    applyTranslations();
+    showLanguagePrompt();
+  } else {
+    _i18nStrings = await loadLocale(_currentLocale);
+    applyTranslations();
+  }
+}
+
 const APP_BASE = window.location.pathname.startsWith('/player') ? '/player' : '';
 const API_BASE = `${APP_BASE}/api`;
 const CLIENT_ID = '920133124095098881';
@@ -24,6 +142,7 @@ let currentVoiceChannelId = null;
 let botVoiceChannelId = null; // voice channel the bot is currently occupying
 let playerState = { active: false };
 let queueData = { current: null, tracks: [], length: 0 };
+let lastPositionUpdate = 0; // timestamp of when position was last fetched from server
 let pollInterval = null;
 let searchTimeout = null;
 let isSeeking = false;
@@ -101,6 +220,33 @@ const playlistCancel = $('#playlist-cancel');
 const vcModal = $('#vc-modal');
 const vcList = $('#vc-list');
 const vcModalClose = $('#vc-modal-close');
+const pasteModal = $('#paste-modal');
+const pasteLoading = $('#paste-loading');
+const pasteResult = $('#paste-result');
+const pasteError = $('#paste-error');
+const pasteErrorText = $('#paste-error-text');
+const pasteThumb = $('#paste-thumb');
+const pasteTitle = $('#paste-title');
+const pasteAuthor = $('#paste-author');
+const pasteDuration = $('#paste-duration');
+const pasteConfirm = $('#paste-confirm');
+const pasteCancel = $('#paste-cancel');
+const pasteErrorClose = $('#paste-error-close');
+const bugModal = $('#bug-modal');
+const bugForm = $('#bug-form');
+const bugCategory = $('#bug-category');
+const bugSubject = $('#bug-subject');
+const bugDescription = $('#bug-description');
+const bugContact = $('#bug-contact');
+const bugCancel = $('#bug-cancel');
+const bugSubmit = $('#bug-submit');
+const btnBugReport = $('#btn-bug-report');
+const btnLang = $('#btn-lang');
+const langModal = $('#lang-modal');
+const confirmModal = $('#confirm-modal');
+const confirmModalText = $('#confirm-modal-text');
+const confirmModalYes = $('#confirm-modal-yes');
+const confirmModalNo = $('#confirm-modal-no');
 const lyricsPanel = $('#lyrics-panel');
 const lyricsThumb = $('#lyrics-thumb');
 const lyricsTitle = $('#lyrics-title');
@@ -111,6 +257,7 @@ const lyricsClose = $('#lyrics-close');
 const btnSidebarToggle = $('#btn-sidebar-toggle');
 const sidebarOverlay = $('#sidebar-overlay');
 const sidebar = $('.sidebar');
+const btnDesktopSidebarToggle = $('#btn-desktop-sidebar-toggle');
 
 // ── Mobile Player DOM refs ──
 const mobilePlayer = $('#mobile-player');
@@ -186,11 +333,40 @@ const ctxSkipTo = $('#ctx-skip-to');
 const ctxRemoveQueue = $('#ctx-remove-queue');
 
 // ── API Helper ──
+let _rateLimitedUntil = 0;
+let _rateLimitToastShown = false;
+
 async function api(path, opts = {}) {
   const headers = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  // If we're in cooldown, reject immediately
+  if (Date.now() < _rateLimitedUntil) {
+    if (!_rateLimitToastShown) {
+      _rateLimitToastShown = true;
+      showToast(t('common.rate_limited'), 'warn', 4000);
+      setTimeout(() => { _rateLimitToastShown = false; }, 4000);
+    }
+    throw { status: 429, error: 'Rate limited', handled: true };
+  }
+
   const res = await fetch(`${API_BASE}${path}`, { ...opts, headers });
   if (res.status === 401) { logout(); return null; }
+
+  if (res.status === 429) {
+    const retryAfter = parseInt(res.headers.get('Retry-After') || '5', 10);
+    _rateLimitedUntil = Date.now() + retryAfter * 1000;
+    document.body.classList.add('rate-limited');
+    setTimeout(() => document.body.classList.remove('rate-limited'), retryAfter * 1000);
+
+    if (!_rateLimitToastShown) {
+      _rateLimitToastShown = true;
+      showToast(t('common.rate_limited'), 'warn', 4000);
+      setTimeout(() => { _rateLimitToastShown = false; }, 4000);
+    }
+    throw { status: 429, error: 'Rate limited', handled: true };
+  }
+
   const data = await res.json();
   if (!res.ok) throw { status: res.status, ...data };
   return data;
@@ -345,6 +521,9 @@ function setupApp() {
   userAvatar.src = proxifyImageUrl(avatarUrl);
   userName.textContent = user.globalName || user.username;
 
+  // Esconde botão de logout no Discord Activity (login é automático)
+  if (IS_DISCORD_ACTIVITY && btnLogout) btnLogout.classList.add('hidden');
+
   // Restore collapsed servers state
   const serversCollapsed = localStorage.getItem('kennyy_servers_collapsed') === 'true';
   if (serversCollapsed) {
@@ -363,6 +542,17 @@ function setupApp() {
   }
   if (sidebarOverlay) {
     sidebarOverlay.onclick = closeMobileSidebar;
+  }
+
+  // Desktop sidebar collapse — restore saved state + bind toggle
+  if (localStorage.getItem('sidebar-collapsed') === 'true') {
+    app.classList.add('sidebar-collapsed');
+  }
+  if (btnDesktopSidebarToggle) {
+    btnDesktopSidebarToggle.onclick = () => {
+      const collapsed = app.classList.toggle('sidebar-collapsed');
+      localStorage.setItem('sidebar-collapsed', collapsed);
+    };
   }
 
   // Mobile player init
@@ -420,6 +610,7 @@ function createGuildItem(g, inVoice) {
     const initials = g.name.split(' ').map(w => w[0]).join('').slice(0, 2);
     el.innerHTML = `<div class="guild-icon-placeholder">${sanitize(initials)}</div><span>${sanitize(g.name)}</span>${voiceIcon}`;
   }
+  el.title = g.name;
   el.onclick = () => selectGuild(g.id);
   return el;
 }
@@ -480,6 +671,7 @@ async function refreshState() {
     ]);
     playerState = pState || { active: false };
     queueData = qData || { current: null, tracks: [], length: 0 };
+    lastPositionUpdate = Date.now();
 
     // Track where the bot currently is
     botVoiceChannelId = playerState.voiceId || null;
@@ -523,6 +715,7 @@ async function refreshState() {
 
 // ── Queue Rendering ──
 let dragSrcIndex = null;
+let externalDropIndicator = null;
 
 /** True when the user is in a VC but it's different from the bot's VC. */
 function isWrongChannel() {
@@ -546,8 +739,8 @@ function renderQueue() {
     queueList.innerHTML = `
       <div class="queue-empty wrong-channel-notice">
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        <p><strong>Você não está no mesmo canal que o bot</strong></p>
-        <p>Entre no canal <span class="wc-channel-name">${sanitize(botChName)}</span> para controlar a reprodução.</p>
+        <p><strong>${t('queue.wrong_channel')}</strong></p>
+        <p>${t('queue.wrong_channel_hint', {channel: '<span class="wc-channel-name">' + sanitize(botChName) + '</span>'})}</p>
       </div>`;
     return;
   }
@@ -568,10 +761,10 @@ function renderQueue() {
     if (!currentVoiceChannelId) {
       queueList.innerHTML = `<div class="queue-empty queue-empty-voice">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-        <p>Join a voice channel on this server to start playing</p>
+        <p>${t('queue.join_vc')}</p>
       </div>`;
     } else {
-      queueList.innerHTML = '<div class="queue-empty"><p>No tracks in queue</p></div>';
+      queueList.innerHTML = '<div class="queue-empty"><p>' + t('queue.no_tracks') + '</p></div>';
     }
     return;
   }
@@ -666,6 +859,102 @@ function renderQueue() {
   });
 }
 
+// ── External Drag & Drop (drag a link onto the queue) ──
+
+function getDropUrl(e) {
+  const uri = e.dataTransfer.getData('text/uri-list');
+  const text = e.dataTransfer.getData('text/plain');
+  const raw = (uri || text || '').split('\n').find(l => l && !l.startsWith('#'))?.trim();
+  return raw && isMediaUrl(raw) ? raw : null;
+}
+
+function isExternalDrag(e) {
+  // Internal reorder has dragSrcIndex set; external drags don't
+  if (dragSrcIndex !== null) return false;
+  const types = [...(e.dataTransfer?.types || [])];
+  return types.includes('text/uri-list') || types.includes('text/plain');
+}
+
+function getDropPosition(e) {
+  const items = queueList.querySelectorAll('.queue-item:not(.playing)');
+  for (const el of items) {
+    const rect = el.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if (e.clientY < mid) {
+      return { index: parseInt(el.dataset.queueIndex) || 0, before: el };
+    }
+  }
+  // After last item
+  const last = items[items.length - 1];
+  const lastIdx = last ? (parseInt(last.dataset.queueIndex) + 1) : 0;
+  return { index: lastIdx, before: null };
+}
+
+function showDropIndicator(refEl) {
+  removeDropIndicator();
+  externalDropIndicator = document.createElement('div');
+  externalDropIndicator.className = 'queue-drop-indicator';
+  if (refEl) {
+    queueList.insertBefore(externalDropIndicator, refEl);
+  } else {
+    queueList.appendChild(externalDropIndicator);
+  }
+}
+
+function removeDropIndicator() {
+  if (externalDropIndicator) {
+    externalDropIndicator.remove();
+    externalDropIndicator = null;
+  }
+}
+
+queueList.addEventListener('dragover', (e) => {
+  if (!isExternalDrag(e)) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+  queueList.classList.add('drag-external');
+  const { before } = getDropPosition(e);
+  showDropIndicator(before);
+});
+
+queueList.addEventListener('dragleave', (e) => {
+  if (!isExternalDrag(e)) return;
+  // Only remove if truly leaving the list (not entering a child)
+  if (!queueList.contains(e.relatedTarget)) {
+    removeDropIndicator();
+    queueList.classList.remove('drag-external');
+  }
+});
+
+queueList.addEventListener('drop', async (e) => {
+  removeDropIndicator();
+  queueList.classList.remove('drag-external');
+  if (dragSrcIndex !== null) return; // internal reorder, handled per-item
+  e.preventDefault();
+
+  const url = getDropUrl(e);
+  if (!url) return;
+
+  if (!currentVoiceChannelId) {
+    showToast(t('common.join_vc_first'), 'warn');
+    return;
+  }
+
+  const { index } = getDropPosition(e);
+
+  showToast(t('common.adding_to_queue'), 'info');
+  try {
+    const result = await sendCommand('play', { query: url, position: index });
+    const name = result?.added?.[0]?.title || 'Track';
+    showToast(t('common.added_at_position', {name, position: index + 1}), 'success');
+    await refreshState();
+  } catch (err) {
+    if (!err?.handled) {
+      showToast(t('common.failed_add_track'), 'error');
+    }
+  }
+});
+
 async function moveTrack(from, to) {
   if (!currentGuildId) return;
   try {
@@ -673,10 +962,10 @@ async function moveTrack(from, to) {
       method: 'POST',
       body: JSON.stringify({ from, to, voiceChannelId: currentVoiceChannelId })
     });
-    showToast('Queue reordered', 'success');
+    showToast(t('queue.reordered'), 'success');
     await refreshState();
   } catch (err) {
-    if (err.status === 403) showToast(err.error || 'You do not have permission to reorder the queue', 'warn');
+    if (err.status === 403) showToast(err.error || t('common.no_permission_reorder'), 'warn');
   }
 }
 
@@ -700,12 +989,12 @@ function toggleMobileQueue() {
   if (mpQueueVisible) {
     mpNpView.classList.add('hidden');
     mpQueueView.classList.remove('hidden');
-    mpHeaderLabel.textContent = 'Queue';
+    mpHeaderLabel.textContent = t('player.queue_btn');
     renderMobileQueue();
   } else {
     mpQueueView.classList.add('hidden');
     mpNpView.classList.remove('hidden');
-    mpHeaderLabel.textContent = 'Now Playing';
+    mpHeaderLabel.textContent = t('player.now_playing');
   }
 }
 
@@ -718,7 +1007,7 @@ function renderMobileQueue() {
   for (const t of (queueData.tracks || [])) items.push({ track: t, isCurrent: false, index: t.index });
 
   if (!items.length) {
-    mpQueueList.innerHTML = '<div class="queue-empty"><p>Queue is empty</p></div>';
+    mpQueueList.innerHTML = '<div class="queue-empty"><p>' + t('queue.empty') + '</p></div>';
     return;
   }
 
@@ -796,9 +1085,9 @@ function syncMobilePlayer() {
   const loopMode = playerState.loop || 'none';
   if (mpLoop) mpLoop.classList.toggle('loop-active', loopMode !== 'none');
   if (mpLoopBadge) {
-    if (loopMode === 'track') { mpLoopBadge.textContent = '1'; mpLoopBadge.classList.remove('hidden'); if (mpLoop) mpLoop.title = 'Loop: Track'; }
-    else if (loopMode === 'queue') { mpLoopBadge.textContent = '∞'; mpLoopBadge.classList.remove('hidden'); if (mpLoop) mpLoop.title = 'Loop: Queue'; }
-    else { mpLoopBadge.classList.add('hidden'); if (mpLoop) mpLoop.title = 'Loop: Off'; }
+    if (loopMode === 'track') { mpLoopBadge.textContent = '1'; mpLoopBadge.classList.remove('hidden'); if (mpLoop) mpLoop.title = t('player.loop_track'); }
+    else if (loopMode === 'queue') { mpLoopBadge.textContent = '∞'; mpLoopBadge.classList.remove('hidden'); if (mpLoop) mpLoop.title = t('player.loop_queue'); }
+    else { mpLoopBadge.classList.add('hidden'); if (mpLoop) mpLoop.title = t('player.loop_off'); }
   }
 
   // Lyrics button
@@ -905,14 +1194,14 @@ function renderNowPlaying() {
   if (loopMode === 'track') {
     loopBadge.textContent = '1';
     loopBadge.classList.remove('hidden');
-    btnLoop.title = 'Loop: Track';
+    btnLoop.title = t('player.loop_track');
   } else if (loopMode === 'queue') {
     loopBadge.textContent = '∞';
     loopBadge.classList.remove('hidden');
-    btnLoop.title = 'Loop: Queue';
+    btnLoop.title = t('player.loop_queue');
   } else {
     loopBadge.classList.add('hidden');
-    btnLoop.title = 'Loop: Off';
+    btnLoop.title = t('player.loop_off');
   }
 
   // Volume
@@ -936,8 +1225,37 @@ function renderNowPlaying() {
 }
 
 // ── Player Commands ──
+function isLiveLikeUrl(query) {
+  if (!/^https?:\/\//i.test(query || '')) return false;
+
+  try {
+    const url = new URL(query);
+    const host = url.hostname.toLowerCase();
+    const path = url.pathname.toLowerCase();
+
+    if (host.includes('twitch.tv') || host.includes('kick.com') || host.includes('trovo.live')) {
+      return true;
+    }
+
+    if (host.includes('youtube.com') || host.includes('youtu.be')) {
+      if (path.startsWith('/live') || path.includes('/live/')) return true;
+      if (url.searchParams.get('live') === '1') return true;
+    }
+  } catch {
+    return false;
+  }
+
+  return false;
+}
+
 async function sendCommand(action, body = {}) {
   if (!currentGuildId) return;
+  if (action === 'play' && isLiveLikeUrl(body?.query)) {
+    showToast(t('common.lives_not_supported'), 'warn');
+    const err = new Error('Live streams are disabled on this bot');
+    err.handled = true;
+    throw err;
+  }
   if (currentVoiceChannelId) body.voiceChannelId = currentVoiceChannelId;
   try {
     return await api(`/player/${currentGuildId}/${action}`, {
@@ -945,10 +1263,15 @@ async function sendCommand(action, body = {}) {
       body: JSON.stringify(body)
     });
   } catch (err) {
+    if (action === 'play' && String(err?.error || err?.message || '').toLowerCase().includes('live streams are disabled')) {
+      showToast(t('common.lives_not_supported'), 'warn');
+      err.handled = true;
+      throw err;
+    }
     if (err.status === 400 && err.error?.includes('voice channel')) {
       showVoiceChannelModal();
     } else if (err.status === 403) {
-      showToast(err.error || 'You do not have permission to do that', 'warn');
+      showToast(err.error || t('common.no_permission'), 'warn');
     }
     throw err;
   }
@@ -964,27 +1287,27 @@ async function togglePause() {
     }
     await refreshState();
   } catch (err) {
-    if (err.status !== 403 && err.status !== 400) showToast('Failed to pause/resume', 'error');
+    if (!err?.handled && err.status !== 403 && err.status !== 400) showToast(t('player.failed_pause'), 'error');
   }
 }
 
 async function skip() {
   try {
     await sendCommand('skip');
-    showToast('Skipped track', 'success');
+    showToast(t('player.skipped'), 'success');
     await refreshState();
   } catch (err) {
-    if (err.status !== 403 && err.status !== 400) showToast('Failed to skip', 'error');
+    if (!err?.handled && err.status !== 403 && err.status !== 400) showToast(t('player.failed_skip'), 'error');
   }
 }
 
 async function stopPlayer() {
   try {
     await sendCommand('stop');
-    showToast('Player stopped', 'info');
+    showToast(t('player.stopped'), 'info');
     await refreshState();
   } catch (err) {
-    if (err.status !== 403 && err.status !== 400) showToast('Failed to stop', 'error');
+    if (!err?.handled && err.status !== 403 && err.status !== 400) showToast(t('player.failed_stop'), 'error');
   }
 }
 
@@ -996,13 +1319,13 @@ async function skipTo(index) {
     });
     await refreshState();
   } catch (err) {
-    if (err.status === 403) showToast(err.error || 'You do not have permission to do that', 'warn');
+    if (err.status === 403) showToast(err.error || t('common.no_permission'), 'warn');
   }
 }
 
 async function cycleLoop() {
   const modes = ['none', 'track', 'queue'];
-  const labels = { none: 'Loop off', track: 'Looping track', queue: 'Looping queue' };
+  const labels = { none: t('player.loop_off_toast'), track: t('player.looping_track'), queue: t('player.looping_queue') };
   const current = playerState.loop || 'none';
   const nextIdx = (modes.indexOf(current) + 1) % modes.length;
   try {
@@ -1010,16 +1333,16 @@ async function cycleLoop() {
     showToast(labels[modes[nextIdx]], 'info');
     await refreshState();
   } catch (err) {
-    if (err.status !== 403 && err.status !== 400) showToast('Failed to change loop', 'error');
+    if (!err?.handled && err.status !== 403 && err.status !== 400) showToast(t('player.failed_loop'), 'error');
   }
 }
 
 async function setVolume(vol) {
   try {
     await sendCommand('volume', { volume: parseInt(vol) });
-    showToast(`Volume: ${vol}%`, 'info');
+    showToast(t('player.volume_set', {vol}), 'info');
   } catch (err) {
-    if (err.status !== 403 && err.status !== 400) showToast('Failed to set volume', 'error');
+    if (!err?.handled && err.status !== 403 && err.status !== 400) showToast(t('player.failed_volume'), 'error');
   }
 }
 
@@ -1047,7 +1370,7 @@ async function showLyrics() {
   lyricsTitle.textContent = track.title;
   lyricsArtist.textContent = track.author;
   lyricsThumb.src = proxifyImageUrl(track.thumbnail || '');
-  lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">Loading lyrics...</p><div class="lyrics-spacer-bottom"></div>';
+  lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">' + t('lyrics.loading') + '</p><div class="lyrics-spacer-bottom"></div>';
   lyricsSource.textContent = '';
   btnLyrics.classList.add('lyrics-active');
 
@@ -1066,10 +1389,10 @@ async function showLyrics() {
       lyricsCache[cacheKey] = data;
       renderLyrics(data);
     } else {
-      lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">No lyrics found for this track.</p><div class="lyrics-spacer-bottom"></div>';
+      lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">' + t('lyrics.not_found') + '</p><div class="lyrics-spacer-bottom"></div>';
     }
   } catch {
-    lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">Failed to fetch lyrics.</p><div class="lyrics-spacer-bottom"></div>';
+    lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">' + t('lyrics.failed') + '</p><div class="lyrics-spacer-bottom"></div>';
   }
 }
 
@@ -1099,16 +1422,16 @@ function renderLyrics(data) {
       `<div class="lyrics-plain">${sanitize(data.lyrics)}</div>` +
       '<div class="lyrics-spacer-bottom"></div>';
   } else {
-    lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">No lyrics found.</p><div class="lyrics-spacer-bottom"></div>';
+    lyricsBody.innerHTML = '<div class="lyrics-spacer-top"></div><p class="lyrics-loading">' + t('lyrics.not_found') + '</p><div class="lyrics-spacer-bottom"></div>';
   }
 
-  lyricsSource.textContent = data.source ? `Source: ${data.source}` : '';
+  lyricsSource.textContent = data.source ? t('lyrics.source', {source: data.source}) : '';
 }
 
 function startLyricsSync() {
   stopLyricsSync();
   syncLyricsHighlight();
-  lyricsSyncInterval = setInterval(syncLyricsHighlight, 200);
+  lyricsSyncInterval = setInterval(syncLyricsHighlight, 150);
 }
 
 function stopLyricsSync() {
@@ -1118,10 +1441,22 @@ function stopLyricsSync() {
   }
 }
 
+// Interpolate position between polls so lyrics don't stall
+function getInterpolatedPosition() {
+  const LYRICS_LOOKAHEAD_MS = 300;
+  const basePos = queueData.position || playerState.position || 0;
+  const paused = playerState.paused;
+  if (paused || !lastPositionUpdate) return basePos + LYRICS_LOOKAHEAD_MS;
+  const elapsed = Date.now() - lastPositionUpdate;
+  const dur = queueData.current?.length || 0;
+  const interpolated = basePos + elapsed + LYRICS_LOOKAHEAD_MS;
+  return dur > 0 ? Math.min(interpolated, dur) : interpolated;
+}
+
 function syncLyricsHighlight() {
   if (!lyricsOpen || !lyricsTimedLines.length) return;
 
-  const pos = queueData.position || playerState.position || 0;
+  const pos = getInterpolatedPosition();
 
   // Find the current line index
   let activeIdx = -1;
@@ -1174,14 +1509,124 @@ function handleSearch(e) {
     searchResults.classList.add('hidden');
     return;
   }
+  // Não dispara busca normal se for URL (handled by paste)
+  if (isMediaUrl(q)) return;
   searchTimeout = setTimeout(() => doSearch(q), 400);
+}
+
+function isMediaUrl(text) {
+  try {
+    const url = new URL(text);
+    const hosts = [
+      'youtube.com', 'youtu.be', 'music.youtube.com',
+      'spotify.com', 'open.spotify.com',
+      'soundcloud.com', 'deezer.com', 'deezer.page.link',
+      'music.apple.com', 'tidal.com', 'twitch.tv'
+    ];
+    return hosts.some(h => url.hostname === h || url.hostname.endsWith('.' + h));
+  } catch {
+    return false;
+  }
+}
+
+let pendingPasteTrack = null;
+
+function handlePaste(e) {
+  const text = (e.clipboardData || window.clipboardData)?.getData('text')?.trim();
+  if (!text || !isMediaUrl(text)) return;
+
+  e.preventDefault();
+  searchInput.value = '';
+  searchResults.classList.add('hidden');
+  showPasteModal(text);
+}
+
+async function showPasteModal(url) {
+  pendingPasteTrack = null;
+  pasteLoading.classList.remove('hidden');
+  pasteResult.classList.add('hidden');
+  pasteError.classList.add('hidden');
+  pasteModal.classList.remove('hidden');
+
+  try {
+    const data = await api(`/search?q=${encodeURIComponent(url)}`);
+
+    // Se for playlist, delega ao modal de playlist
+    if (data.type === 'PLAYLIST' && data.playlistName) {
+      hidePasteModal();
+      showPlaylistModal({
+        name: data.playlistName,
+        thumbnail: data.playlistThumbnail,
+        count: data.totalTracks || data.tracks.length,
+        query: url
+      });
+      return;
+    }
+
+    if (!data?.tracks?.length) {
+      pasteLoading.classList.add('hidden');
+      pasteErrorText.textContent = t('paste.no_results');
+      pasteError.classList.remove('hidden');
+      return;
+    }
+
+    const track = data.tracks[0];
+    pendingPasteTrack = track;
+
+    pasteThumb.src = proxifyImageUrl(track.thumbnail || '');
+    pasteThumb.style.display = track.thumbnail ? '' : 'none';
+    pasteTitle.textContent = track.title;
+    pasteAuthor.textContent = track.author;
+    pasteDuration.textContent = formatTime(track.length);
+
+    pasteConfirm.onclick = () => {
+      const track = pendingPasteTrack;
+      hidePasteModal();
+      if (track) playTrack(track);
+    };
+
+    pasteLoading.classList.add('hidden');
+    pasteResult.classList.remove('hidden');
+  } catch (err) {
+    pasteLoading.classList.add('hidden');
+    pasteErrorText.textContent = t('paste.error');
+    pasteError.classList.remove('hidden');
+  }
+}
+
+function hidePasteModal() {
+  pasteModal.classList.add('hidden');
+  pendingPasteTrack = null;
+}
+
+// ── Generic Confirm Modal ──
+let _confirmResolve = null;
+
+function showConfirmModal(html, onConfirm) {
+  confirmModalText.innerHTML = html;
+  confirmModal.classList.remove('hidden');
+
+  // Clean up any previous handlers
+  const yesClone = confirmModalYes.cloneNode(true);
+  const noClone = confirmModalNo.cloneNode(true);
+  confirmModalYes.replaceWith(yesClone);
+  confirmModalNo.replaceWith(noClone);
+
+  noClone.addEventListener('click', () => confirmModal.classList.add('hidden'));
+  yesClone.addEventListener('click', () => {
+    confirmModal.classList.add('hidden');
+    onConfirm();
+  });
+  confirmModal.addEventListener('click', (e) => {
+    if (e.target === confirmModal) confirmModal.classList.add('hidden');
+  }, { once: true });
 }
 
 async function doSearch(q) {
   try {
     const data = await api(`/search?q=${encodeURIComponent(q)}`);
     if (!data?.tracks?.length) {
-      searchResults.innerHTML = '<div class="search-result-item"><span class="sr-info"><span class="sr-title">No results found</span></span></div>';
+      searchResults.innerHTML = '<div class="search-result-item"><span class="sr-info"><span class="sr-title">' + t('search.no_results') + '</span></span></div>';
       searchResults.classList.remove('hidden');
       return;
     }
@@ -1262,7 +1707,7 @@ async function confirmPlaylist() {
 
   try {
     await sendCommand('play', { query });
-    showToast('Added to queue', 'success');
+    showToast(t('playlist.added_to_queue'), 'success');
     await refreshState();
   } catch {}
 }
@@ -1278,7 +1723,7 @@ async function playTrack(track) {
 
   try {
     await sendCommand('play', { query: track.uri || track.title });
-    showToast(`Playing: ${track.title}`, 'success');
+    showToast(t('common.playing', {title: track.title}), 'success');
     await refreshState();
   } catch {}
 }
@@ -1294,7 +1739,7 @@ function showVoiceChannelModal(pendingTrack) {
   vcList.innerHTML = '';
 
   if (!userChannels.length) {
-    vcList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:10px 14px;">You need to join a voice channel on Discord first.</p>';
+    vcList.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:10px 14px;">' + t('vc_modal.join_vc_first') + '</p>';
     vcModal.classList.remove('hidden');
     return;
   }
@@ -1378,7 +1823,7 @@ async function loadUserPlaylists() {
 function renderUserPlaylists() {
   userPlaylistList.innerHTML = '';
   if (!userPlaylists.length) {
-    userPlaylistList.innerHTML = '<p style="color:var(--text-muted);font-size:12px;padding:4px 10px;">No playlists yet</p>';
+    userPlaylistList.innerHTML = '<p style="color:var(--text-muted);font-size:12px;padding:4px 10px;">' + t('playlist.no_playlists') + '</p>';
     return;
   }
   for (const p of userPlaylists) {
@@ -1397,6 +1842,7 @@ function renderUserPlaylists() {
         <div class="playlist-item-count">${p.trackCount} track${p.trackCount !== 1 ? 's' : ''}</div>
       </div>
     `;
+    el.title = p.name;
     el.onclick = () => openPlaylistView(p.id);
     userPlaylistList.appendChild(el);
   }
@@ -1404,8 +1850,8 @@ function renderUserPlaylists() {
 
 function openCreatePlaylist() {
   currentEditPlaylistId = null;
-  plEditTitle.textContent = 'New Playlist';
-  plEditSave.textContent = 'Create';
+  plEditTitle.textContent = t('playlist.new_playlist');
+  plEditSave.textContent = t('playlist.create');
   plEditName.value = '';
   plEditImage.value = '';
   plImportUrl.value = '';
@@ -1419,8 +1865,8 @@ function openEditPlaylist(id) {
   if (!p) return;
   currentEditPlaylistId = id;
   pendingTrackForNewPlaylist = null;
-  plEditTitle.textContent = 'Edit Playlist';
-  plEditSave.textContent = 'Save';
+  plEditTitle.textContent = t('playlist.edit_playlist_title');
+  plEditSave.textContent = t('playlist.save');
   plEditName.value = p.name || '';
   plEditImage.value = p.image || '';
   plImportUrl.value = '';
@@ -1457,14 +1903,14 @@ async function savePlaylist() {
     }
     pendingTrackForNewPlaylist = null;
     plEditModal.classList.add('hidden');
-    showToast(currentEditPlaylistId ? 'Playlist updated' : 'Playlist created', 'success');
+    showToast(currentEditPlaylistId ? t('playlist.playlist_updated') : t('playlist.playlist_created'), 'success');
     await loadUserPlaylists();
     // If we were viewing the edited playlist, refresh the view
     if (currentEditPlaylistId && viewingPlaylistId === currentEditPlaylistId) {
       openPlaylistView(currentEditPlaylistId);
     }
   } catch (err) {
-    showToast('Failed to save playlist', 'error');
+    showToast(t('playlist.failed_save'), 'error');
     console.error('Save playlist error:', err);
   }
 }
@@ -1486,7 +1932,7 @@ async function importToPlaylist() {
       targetId = created.id;
       currentEditPlaylistId = targetId;
     } catch (err) {
-      plImportStatus.textContent = 'Failed to create playlist';
+      plImportStatus.textContent = t('playlist.failed_import_create');
       plImportStatus.className = 'pl-import-status error';
       plImportStatus.classList.remove('hidden');
       return;
@@ -1494,7 +1940,7 @@ async function importToPlaylist() {
   }
 
   plImportBtn.disabled = true;
-  plImportStatus.textContent = 'Importing tracks...';
+  plImportStatus.textContent = t('playlist.importing');
   plImportStatus.className = 'pl-import-status';
   plImportStatus.classList.remove('hidden');
 
@@ -1503,13 +1949,13 @@ async function importToPlaylist() {
       method: 'POST',
       body: JSON.stringify({ url })
     });
-    plImportStatus.textContent = `Imported ${result.imported} track${result.imported !== 1 ? 's' : ''}${result.playlistName ? ` from "${result.playlistName}"` : ''}`;
+    plImportStatus.textContent = t('playlist.imported_tracks', {count: result.imported}) + (result.playlistName ? ` from "${result.playlistName}"` : '');
     plImportStatus.className = 'pl-import-status success';
     plImportUrl.value = '';
-    showToast(`Imported ${result.imported} track${result.imported !== 1 ? 's' : ''}`, 'success');
+    showToast(t('playlist.imported_tracks', {count: result.imported}), 'success');
     await loadUserPlaylists();
   } catch (err) {
-    plImportStatus.textContent = err?.error || 'Import failed';
+    plImportStatus.textContent = err?.error || t('playlist.import_failed');
     plImportStatus.className = 'pl-import-status error';
   } finally {
     plImportBtn.disabled = false;
@@ -1552,7 +1998,7 @@ function closePlaylistView() {
 function renderPlaylistTracks(playlist) {
   pvTracks.innerHTML = '';
   if (!playlist.tracks.length) {
-    pvTracks.innerHTML = '<div class="pv-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><p>No tracks yet</p><p style="font-size:12px">Edit this playlist to import tracks</p></div>';
+    pvTracks.innerHTML = '<div class="pv-empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><p>' + t('playlist.no_tracks') + '</p><p style="font-size:12px">' + t('playlist.edit_to_import') + '</p></div>';
     return;
   }
   playlist.tracks.forEach((t, i) => {
@@ -1597,7 +2043,7 @@ function renderPlaylistTracks(playlist) {
 }
 
 function showPvLoading(text) {
-  pvLoadingText.textContent = text || 'Loading playlist...';
+  pvLoadingText.textContent = text || t('playlist.loading');
   pvLoading.classList.remove('hidden');
 }
 function hidePvLoading() {
@@ -1615,9 +2061,9 @@ async function playFromPlaylist(playlistId, trackIndex) {
   try {
     const playlist = await api(`/playlists/${playlistId}`);
     if (!playlist || !playlist.tracks[trackIndex]) return;
-    const t = playlist.tracks[trackIndex];
-    await sendCommand('play', { query: t.uri || `${t.title} ${t.author}`, forcePlay: true });
-    showToast(`Playing: ${t.title}`, 'success');
+    const tr = playlist.tracks[trackIndex];
+    await sendCommand('play', { query: tr.uri || `${tr.title} ${tr.author}`, forcePlay: true });
+    showToast(t('common.playing', {title: tr.title}), 'success');
     await refreshState();
   } catch (err) {
     if (err.status === 400 && err.error?.includes('voice channel')) {
@@ -1642,13 +2088,13 @@ async function playUserPlaylist(id) {
     return;
   }
 
-  showPvLoading('Adding tracks to queue...');
+  showPvLoading(t('common.adding_to_queue'));
   try {
     await api(`/playlists/${id}/play`, {
       method: 'POST',
       body: JSON.stringify({ guildId: currentGuildId, voiceChannelId: currentVoiceChannelId })
     });
-    showToast('Playlist added to queue', 'success');
+    showToast(t('playlist.playlist_added'), 'success');
     await refreshState();
   } catch (err) {
     if (err.status === 400 && err.error?.includes('voice channel')) {
@@ -1660,15 +2106,15 @@ async function playUserPlaylist(id) {
 }
 
 async function deleteUserPlaylist(id) {
-  if (!confirm('Delete this playlist? This cannot be undone.')) return;
+  if (!confirm(t('playlist.confirm_delete'))) return;
   try {
     await api(`/playlists/${id}`, { method: 'DELETE' });
-    showToast('Playlist deleted', 'success');
+    showToast(t('playlist.playlist_deleted'), 'success');
     if (viewingPlaylistId === id) closePlaylistView();
     viewingPlaylistId = null;
     await loadUserPlaylists();
   } catch {
-    showToast('Failed to delete playlist', 'error');
+    showToast(t('playlist.failed_delete'), 'error');
   }
 }
 
@@ -1683,9 +2129,9 @@ async function exportUserPlaylist(id) {
     a.download = `${data.name || 'playlist'}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('Playlist exported', 'success');
+    showToast(t('playlist.playlist_exported'), 'success');
   } catch {
-    showToast('Export failed', 'error');
+    showToast(t('playlist.export_failed'), 'error');
   }
 }
 
@@ -1703,10 +2149,10 @@ function importPlaylistFile() {
         method: 'POST',
         body: JSON.stringify(data)
       });
-      showToast('Playlist imported from file', 'success');
+      showToast(t('playlist.playlist_imported'), 'success');
       await loadUserPlaylists();
     } catch (err) {
-      showToast('Import failed', 'error');
+      showToast(t('playlist.import_failed'), 'error');
       console.error('Import file error:', err);
     }
   };
@@ -1765,7 +2211,7 @@ function showContextMenu(e, target) {
   const newPl = document.createElement('div');
   newPl.className = 'ctx-sub-item';
   newPl.style.color = 'var(--accent)';
-  newPl.textContent = '+ New Playlist';
+  newPl.textContent = '+ ' + t('playlist.new_playlist');
   newPl.onclick = (ev) => {
     ev.stopPropagation();
     const track = ctxTarget?.track;
@@ -1798,12 +2244,12 @@ async function addTrackToPlaylist(playlistId, track) {
       body: JSON.stringify({ tracks: [track] })
     });
     const pl = userPlaylists.find(p => p.id === playlistId);
-    showToast(`Added to ${pl?.name || 'playlist'}`, 'success');
+    showToast(t('context_menu.added_to_playlist', {name: pl?.name || 'playlist'}), 'success');
     await loadUserPlaylists();
     // Refresh view if we're looking at this playlist
     if (viewingPlaylistId === playlistId) openPlaylistView(playlistId);
   } catch (err) {
-    showToast('Failed to add to playlist', 'error');
+    showToast(t('context_menu.failed_add_playlist'), 'error');
     console.error('Add to playlist error:', err);
   }
 }
@@ -1824,7 +2270,7 @@ async function ctxAddToQueue() {
   }
   try {
     await sendCommand('play', { query: t.uri || t.title });
-    showToast('Added to queue', 'success');
+    showToast(t('context_menu.added_to_queue'), 'success');
     await refreshState();
   } catch {}
 }
@@ -1834,7 +2280,7 @@ async function ctxRemoveFromPlaylist() {
   hideContextMenu();
   if (!target?.playlistId || target.trackIndex === undefined) return;
   await removePlaylistTrack(target.playlistId, target.trackIndex);
-  showToast('Removed from playlist', 'success');
+  showToast(t('context_menu.removed_from_playlist'), 'success');
 }
 
 async function ctxSkipToTrack() {
@@ -1852,7 +2298,7 @@ async function ctxMovePlayNext() {
   if (!target || target.queueIndex === undefined || target.queueIndex === 0) return;
   try {
     await moveTrack(target.queueIndex, 0);
-    showToast('Moved to next', 'success');
+    showToast(t('context_menu.moved_to_next'), 'success');
   } catch {}
 }
 
@@ -1865,16 +2311,30 @@ async function ctxRemoveFromQueue() {
       method: 'DELETE',
       body: JSON.stringify({ voiceChannelId: currentVoiceChannelId })
     });
-    showToast('Removed from queue', 'success');
+    showToast(t('context_menu.removed_from_queue'), 'success');
     await refreshState();
   } catch (err) {
-    if (err.status === 403) showToast(err.error || 'You do not have permission to remove tracks', 'warn');
+    if (err.status === 403) showToast(err.error || t('common.no_permission_remove'), 'warn');
   }
 }
 
 // ── Event Bindings ──
 btnLogin.onclick = () => { window.location.href = OAUTH_URL; };
 btnLogout.onclick = logout;
+
+// ── Language Picker ──
+btnLang.onclick = () => showLanguagePrompt();
+langModal.onclick = (e) => { if (e.target === langModal) hideLanguagePrompt(); };
+langModal.querySelectorAll('.lang-option').forEach(btn => {
+  btn.onclick = () => {
+    setLocale(btn.dataset.locale);
+    hideLanguagePrompt();
+  };
+});
+langModal.querySelectorAll('.theme-option').forEach(btn => {
+  btn.onclick = () => setTheme(btn.dataset.theme);
+});
+
 btnToggleServers.onclick = () => {
   guildOtherSection.classList.toggle('collapsed');
   const isCollapsed = guildOtherSection.classList.contains('collapsed');
@@ -1887,11 +2347,50 @@ btnLoop.onclick = cycleLoop;
 btnLyrics.onclick = showLyrics;
 lyricsClose.onclick = closeLyrics;
 searchInput.oninput = handleSearch;
+searchInput.addEventListener('paste', handlePaste);
 npProgressBar.onclick = handleProgressClick;
 vcModalClose.onclick = () => vcModal.classList.add('hidden');
 playlistConfirm.onclick = confirmPlaylist;
 playlistCancel.onclick = hidePlaylistModal;
 playlistModal.onclick = (e) => { if (e.target === playlistModal) hidePlaylistModal(); };
+pasteCancel.onclick = hidePasteModal;
+pasteErrorClose.onclick = hidePasteModal;
+pasteModal.onclick = (e) => { if (e.target === pasteModal) hidePasteModal(); };
+
+// ── Bug Report ──
+btnBugReport.onclick = () => bugModal.classList.remove('hidden');
+bugCancel.onclick = () => bugModal.classList.add('hidden');
+bugModal.onclick = (e) => { if (e.target === bugModal) bugModal.classList.add('hidden'); };
+bugForm.onsubmit = async (e) => {
+  e.preventDefault();
+  bugSubmit.classList.add('bug-submit-loading');
+  bugSubmit.textContent = t('bug_report.sending');
+  try {
+    const res = await api('/feedback/report', {
+      method: 'POST',
+      body: JSON.stringify({
+        category: bugCategory.value,
+        subject: bugSubject.value,
+        description: bugDescription.value,
+        contactAllowed: bugContact.checked,
+        userId: user?.id,
+        username: user?.globalName || user?.username
+      })
+    });
+    if (res?.success) {
+      bugModal.classList.add('hidden');
+      bugForm.reset();
+      showToast(t('bug_report.sent'), 'success');
+    } else {
+      showToast(res?.error || t('bug_report.failed'), 'error');
+    }
+  } catch {
+    showToast(t('bug_report.failed'), 'error');
+  } finally {
+    bugSubmit.classList.remove('bug-submit-loading');
+    bugSubmit.textContent = t('bug_report.submit');
+  }
+};
 
 // ── Mobile Player Bindings ──
 // Mini bar → open full-screen player
@@ -2054,7 +2553,7 @@ function renderPermissionsPanel() {
   const vcOnlyMembers = vcMembers.filter(m => !sessionUserIds.has(m.id));
 
   if (!adminId && users.length === 0 && vcOnlyMembers.length === 0) {
-    permBody.innerHTML = '<div class="perm-empty">No active session.<br>Start playing music to create a session.</div>';
+    permBody.innerHTML = '<div class="perm-empty">' + t('permissions.no_session') + '<br>' + t('permissions.no_session_hint') + '</div>';
     return;
   }
 
@@ -2064,14 +2563,14 @@ function renderPermissionsPanel() {
   if (adminId) {
     const adminUser = users.find(u => u.id === adminId);
     const adminName = adminUser?.username || 'Unknown';
-    html += `<div class="perm-section-label">Session Admin</div>`;
+    html += `<div class="perm-section-label">${t('permissions.session_admin')}</div>`;
     html += buildUserRow(adminId, adminName, adminUser?.avatarUrl || null, users.find(u => u.id === adminId)?.permissions || {}, true, iAm, myUserId);
   }
 
   // Non-admin session users
   const others = users.filter(u => u.id !== adminId);
   if (others.length > 0 || vcOnlyMembers.length > 0) {
-    html += `<div class="perm-section-label">Members</div>`;
+    html += `<div class="perm-section-label">${t('permissions.members')}</div>`;
     for (const u of others) {
       html += buildUserRow(u.id, u.username, u.avatarUrl, u.permissions, false, iAm, myUserId);
     }
@@ -2100,28 +2599,32 @@ function renderPermissionsPanel() {
         if (u) u.permissions[perm] = value;
       } catch (err) {
         input.checked = !value; // revert on error
-        showToast(err?.error || 'Failed to update permission', 'error');
+        showToast(err?.error || t('permissions.failed_update'), 'error');
       }
     });
   });
 
   // Wire Give Admin buttons
   permBody.querySelectorAll('.perm-give-admin-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       const toUserId = btn.dataset.userId;
       const toName = btn.dataset.username;
-      if (!confirm(`Transfer admin to ${toName}?`)) return;
-      try {
-        await api(`/permissions/${currentGuildId}/transfer`, {
-          method: 'POST',
-          body: JSON.stringify({ toUserId })
-        });
-        showToast(`Admin transferred to ${toName}`, 'success');
-        await loadPermissions();
-        renderPermissionsPanel();
-      } catch (err) {
-        showToast(err?.error || 'Failed to transfer admin', 'error');
-      }
+      showConfirmModal(
+        t('confirm_modal.transfer_admin_to', {name: `<strong>${sanitize(toName)}</strong>`}),
+        async () => {
+          try {
+            await api(`/permissions/${currentGuildId}/transfer`, {
+              method: 'POST',
+              body: JSON.stringify({ toUserId })
+            });
+            showToast(t('permissions.admin_transferred', {name: toName}), 'success');
+            await loadPermissions();
+            renderPermissionsPanel();
+          } catch (err) {
+            showToast(err?.error || t('permissions.failed_transfer'), 'error');
+          }
+        }
+      );
     });
   });
 }
@@ -2188,12 +2691,12 @@ function buildUserRow(userId, username, avatarUrl, permissions, isAdminUser, vie
   const giveAdminBtn = (viewerIsAdmin && !isAdminRow && !isMe && !noPermsYet)
     ? `<button class="perm-give-admin-btn" data-user-id="${sanitize(userId)}" data-username="${sanitize(username)}">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
-        Give Admin
+        ${t('permissions.give_admin')}
       </button>`
     : '';
 
   const pendingNotice = noPermsYet
-    ? `<div style="font-size:11px;color:var(--text-muted);padding:2px 4px 6px;">Joined VC – will get default permissions on first action</div>`
+    ? `<div style="font-size:11px;color:var(--text-muted);padding:2px 4px 6px;">${t('permissions.pending_notice')}</div>`
     : '';
 
   return `
@@ -2234,6 +2737,8 @@ document.addEventListener('click', (e) => {
 });
 
 // ── Boot ──
+initI18n();
+
 if (IS_DISCORD_ACTIVITY) {
   // Esconde login e mostra tela de loading da Activity
   document.getElementById('login-screen')?.classList.add('hidden');
@@ -2248,7 +2753,7 @@ if (IS_DISCORD_ACTIVITY) {
     .catch(err => {
       console.error('[Activity] Auth failed:', err);
       const loadingText = activityLoading?.querySelector('.activity-loading-text');
-      if (loadingText) loadingText.textContent = `Error: ${err?.message || err}`;
+      if (loadingText) loadingText.textContent = t('common.error_prefix', {message: err?.message || err});
     });
 } else if (!handleOAuthCallback()) {
   init();

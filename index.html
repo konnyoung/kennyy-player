@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Kennyy - WebPlayer</title>
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=31">
   <link rel="icon" href="favicon-teto.ico">
   <!-- SDK do Discord Activity carregado como script clássico (expõe window.DiscordSDKLib) -->
   <script src="discord-sdk.js"></script>
@@ -16,7 +16,7 @@
     <div class="activity-loading-card">
       <h1 class="login-logo"><span class="accent">k</span>ennyy <span class="beta-badge">beta</span></h1>
       <div class="activity-spinner"></div>
-      <p class="activity-loading-text">Connecting...</p>
+      <p class="activity-loading-text" data-i18n="activity.connecting">Connecting...</p>
     </div>
   </div>
 
@@ -24,13 +24,13 @@
   <div id="login-screen" class="login-screen">
     <div class="login-card">
       <h1 class="login-logo"><span class="accent">k</span>ennyy <span class="beta-badge">beta</span></h1>
-      <p class="login-subtitle">Sign in to manage your music</p>
+      <p class="login-subtitle" data-i18n="login.subtitle">Sign in to manage your music</p>
       <button id="btn-login" class="btn-discord">
         <svg fill="currentColor" width="20px" height="20px" viewBox="0 -28.5 256 256" xmlns="http://www.w3.org/2000/svg"><path d="M216.856339,36.4637674 C200.170669,28.8471444 182.261276,23.3644265 163.483165,20.0890691 C163.090623,19.9863484 162.701198,20.2104523 162.5318,20.5732152 C160.279627,25.0454316 157.733796,30.706173 155.93297,35.4262104 C135.539828,32.3892706 115.352467,32.3892706 95.3400511,35.4262104 C93.5392257,30.706173 90.8906377,25.0454316 88.6384643,20.5732152 C88.4690666,20.2104523 88.0796417,19.9863484 87.6870997,20.0890691 C68.9089886,23.3644265 51.0542385,28.8471444 34.3139257,36.4637674 C34.1293717,36.5478496 34.0041235,36.7061324 33.9575825,36.8927599 C3.67039014,81.8239088 -3.10925249,125.688846 1.34114251,168.948293 C1.36511475,169.176461 1.48805988,169.387121 1.67098481,169.525547 C23.9536893,185.836058 45.4533031,195.666991 66.5295171,202.138766 C66.8643194,202.241487 67.2281861,202.083204 67.4127401,201.76442 C72.3619557,195.048382 76.7725906,187.971512 80.6033708,180.536551 C80.8037307,180.147126 80.5516086,179.697412 80.125916,179.551322 C73.1895697,176.924844 66.5511394,173.743126 60.1983058,169.967828 C59.7226065,169.684817 59.6917637,168.995966 60.1345914,168.66579 C61.5036724,167.625807 62.8645371,166.551061 64.1672322,165.4542 C64.3813351,165.26353 64.6983038,165.228581 64.9504258,165.352737 C106.840924,184.453723 150.316075,184.453723 191.733735,165.352737 C191.985857,165.228581 192.302826,165.26353 192.516928,165.4542 C193.819624,166.551061 195.180488,167.625807 196.551648,168.66579 C196.994475,168.995966 196.963632,169.684817 196.485854,169.967828 C190.133021,173.743126 183.492512,176.924844 176.556166,179.551322 C176.130473,179.697412 175.878351,180.147126 176.078711,180.536551 C179.909491,187.971512 184.320126,195.048382 189.269341,201.76442 C189.453895,202.083204 189.817762,202.241487 190.152564,202.138766 C211.228778,195.666991 232.728392,185.836058 255.011097,169.525547 C255.194022,169.387121 255.316967,169.176461 255.340939,168.948293 C260.627725,120.252069 248.874133,76.5169492 216.856339,36.4637674 Z M86.8282361,141.442998 C76.7725906,141.442998 68.4878235,132.227443 68.4878235,120.916965 C68.4878235,109.606488 76.5722308,100.390932 86.8282361,100.390932 C97.1084224,100.390932 105.393189,109.70425 105.19283,120.916965 C105.19283,132.227443 97.1084224,141.442998 86.8282361,141.442998 Z M169.453846,141.442998 C159.398201,141.442998 151.113434,132.227443 151.113434,120.916965 C151.113434,109.606488 159.197841,100.390932 169.453846,100.390932 C179.734032,100.390932 188.018799,109.70425 187.818439,120.916965 C187.818439,132.227443 179.734032,141.442998 169.453846,141.442998 Z"/></svg>
-        Continue with Discord
+        <span data-i18n="login.continue_discord">Continue with Discord</span>
       </button>
       <div class="login-footer">
-        <a href="https://kennyy.com.br">Return to home</a>
+        <a href="https://kennyy.com.br" data-i18n="login.return_home">Return to home</a>
       </div>
     </div>
   </div>
@@ -41,14 +41,19 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-top">
-        <h1 class="logo"><span class="accent">k</span>ennyy <span class="beta-badge">beta</span></h1>
+        <div class="sidebar-header">
+          <h1 class="logo"><span class="accent">k</span><span class="logo-text">ennyy</span> <span class="beta-badge">beta</span></h1>
+          <button id="btn-desktop-sidebar-toggle" class="btn-icon sidebar-collapse-btn" title="Toggle Sidebar">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          </button>
+        </div>
         <div id="guild-active-section" class="guild-section hidden">
-          <p class="sidebar-label">Now playing in</p>
+          <p class="sidebar-label" data-i18n="sidebar.now_playing_in">Now playing in</p>
           <div id="guild-active-list" class="guild-list"></div>
         </div>
         <div id="guild-other-section" class="guild-section">
-          <div class="sidebar-collapsible-header" id="btn-toggle-servers" title="Toggle Servers">
-            <p class="sidebar-label">Your servers</p>
+          <div class="sidebar-collapsible-header" id="btn-toggle-servers" data-i18n-title="sidebar.toggle_servers" title="Toggle Servers">
+            <p class="sidebar-label" data-i18n="sidebar.your_servers">Your servers</p>
             <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
           <div id="guild-other-list" class="guild-list"></div>
@@ -56,8 +61,8 @@
       </div>
       <div class="sidebar-playlists">
         <div class="sidebar-playlists-header">
-          <p class="sidebar-label">My Playlists</p>
-          <button id="btn-create-playlist" class="btn-icon" title="Create Playlist">
+          <p class="sidebar-label" data-i18n="sidebar.my_playlists">My Playlists</p>
+          <button id="btn-create-playlist" class="btn-icon" data-i18n-title="sidebar.create_playlist" title="Create Playlist">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </div>
@@ -67,7 +72,10 @@
         <div id="user-info" class="user-info">
           <img id="user-avatar" class="user-avatar" src="" alt="">
           <span id="user-name" class="user-name"></span>
-          <button id="btn-logout" class="btn-icon" title="Logout">
+          <button id="btn-lang" class="btn-icon" title="Settings" data-i18n-title="common.settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+          <button id="btn-logout" class="btn-icon" data-i18n-title="sidebar.logout" title="Logout">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           </button>
         </div>
@@ -81,12 +89,12 @@
     <main class="main">
       <!-- Search Bar -->
       <div class="search-bar">
-        <button id="btn-sidebar-toggle" class="btn-sidebar-toggle btn-icon" title="Menu" aria-label="Open sidebar">
+        <button id="btn-sidebar-toggle" class="btn-sidebar-toggle btn-icon" data-i18n-title="search.menu" title="Menu" data-i18n-aria="search.open_sidebar" aria-label="Open sidebar">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="search-box">
           <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <input id="search-input" type="text" placeholder="What do you want to listen to?" autocomplete="off">
+          <input id="search-input" type="text" data-i18n-placeholder="search.placeholder" placeholder="What do you want to listen to?" autocomplete="off">
           <div id="search-results" class="search-results hidden"></div>
         </div>
       </div>
@@ -96,13 +104,13 @@
         <div class="queue-header">
           <span></span>
           <span class="col-num">#</span>
-          <span class="col-track">Track name</span>
-          <span class="col-added">Added by</span>
-          <span class="col-dur">Duration</span>
+          <span class="col-track" data-i18n="queue.track_name">Track name</span>
+          <span class="col-added" data-i18n="queue.added_by">Added by</span>
+          <span class="col-dur" data-i18n="queue.duration">Duration</span>
         </div>
         <div id="queue-list" class="queue-list">
           <div class="queue-empty">
-            <p>No tracks in queue</p>
+            <p data-i18n="queue.no_tracks">No tracks in queue</p>
           </div>
         </div>
       </div>
@@ -110,7 +118,7 @@
       <!-- Playlist View (Spotify-like, hidden by default) -->
       <div id="playlist-view" class="main-view hidden">
         <div class="pv-header">
-          <button id="pv-back" class="btn-icon pv-back-btn" title="Back to Queue">
+          <button id="pv-back" class="btn-icon pv-back-btn" data-i18n-title="playlist.back_to_queue" title="Back to Queue">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <div class="pv-hero">
@@ -119,32 +127,32 @@
               <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
             </div>
             <div class="pv-meta">
-              <span class="pv-label">Playlist</span>
+              <span class="pv-label" data-i18n="playlist.label">Playlist</span>
               <h2 id="pv-name" class="pv-name"></h2>
               <span id="pv-count" class="pv-count"></span>
             </div>
           </div>
           <div class="pv-actions">
-            <button id="pv-play" class="pv-play-btn" title="Play All">
+            <button id="pv-play" class="pv-play-btn" data-i18n-title="playlist.play_all" title="Play All">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
             </button>
-            <button id="pv-shuffle" class="btn-icon pv-action-btn" title="Shuffle Play">
+            <button id="pv-shuffle" class="btn-icon pv-action-btn" data-i18n-title="playlist.shuffle_play" title="Shuffle Play">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
             </button>
-            <button id="pv-edit" class="btn-icon pv-action-btn" title="Edit Playlist">
+            <button id="pv-edit" class="btn-icon pv-action-btn" data-i18n-title="playlist.edit_playlist" title="Edit Playlist">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
             </button>
-            <button id="pv-export" class="btn-icon pv-action-btn" title="Export">
+            <button id="pv-export" class="btn-icon pv-action-btn" data-i18n-title="playlist.export" title="Export">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
             </button>
-            <button id="pv-delete" class="btn-icon pv-action-btn pv-delete-btn" title="Delete Playlist">
+            <button id="pv-delete" class="btn-icon pv-action-btn pv-delete-btn" data-i18n-title="playlist.delete_playlist" title="Delete Playlist">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
         </div>
         <div class="pv-track-header">
           <span class="pv-col-num">#</span>
-          <span class="pv-col-track">Title</span>
+          <span class="pv-col-track" data-i18n="playlist.title_col">Title</span>
           <span class="pv-col-dur">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </span>
@@ -153,7 +161,7 @@
         <!-- Loading overlay -->
         <div id="pv-loading" class="pv-loading hidden">
           <div class="pv-loading-spinner"></div>
-          <span id="pv-loading-text" class="pv-loading-text">Loading playlist...</span>
+          <span id="pv-loading-text" class="pv-loading-text" data-i18n="playlist.loading">Loading playlist...</span>
         </div>
       </div>
     </main>
@@ -176,18 +184,18 @@
       </div>
       <div class="np-controls">
         <div class="np-buttons">
-          <button id="btn-loop" class="btn-icon np-btn" title="Loop: Off">
+          <button id="btn-loop" class="btn-icon np-btn" data-i18n-title="player.loop_off" title="Loop: Off">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
             <span id="loop-badge" class="loop-badge hidden"></span>
           </button>
-          <button id="btn-pause" class="btn-icon np-btn np-btn-main" title="Pause/Resume">
+          <button id="btn-pause" class="btn-icon np-btn np-btn-main" data-i18n-title="player.pause_resume" title="Pause/Resume">
             <svg id="icon-pause" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
             <svg id="icon-play" class="hidden" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
           </button>
-          <button id="btn-skip" class="btn-icon np-btn" title="Skip">
+          <button id="btn-skip" class="btn-icon np-btn" data-i18n-title="player.skip" title="Skip">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,4 15,12 5,20"/><rect x="17" y="4" width="3" height="16"/></svg>
           </button>
-          <button id="btn-stop" class="btn-icon np-btn" title="Stop">
+          <button id="btn-stop" class="btn-icon np-btn" data-i18n-title="player.stop" title="Stop">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
           </button>
         </div>
@@ -202,14 +210,14 @@
         </div>
       </div>
       <div class="np-extra">
-        <button id="btn-permissions" class="btn-icon np-btn" title="Session Permissions">
+        <button id="btn-permissions" class="btn-icon np-btn" data-i18n-title="player.session_permissions" title="Session Permissions">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </button>
-        <button id="btn-lyrics" class="btn-icon np-btn" title="Lyrics">
+        <button id="btn-lyrics" class="btn-icon np-btn" data-i18n-title="player.lyrics" title="Lyrics">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 8-9.04 9.06a2.828 2.828 0 1 0 3.98 3.98L16 12"/><circle cx="17" cy="7" r="5"/></svg>
         </button>
         <div class="volume-wrap">
-          <button id="btn-volume" class="btn-icon np-btn" title="Volume">
+          <button id="btn-volume" class="btn-icon np-btn" data-i18n-title="player.volume" title="Volume">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
           </button>
           <div id="volume-dropdown" class="volume-dropdown hidden">
@@ -220,17 +228,17 @@
             <div class="vol-option" data-vol="50">50%</div>
             <div class="vol-option" data-vol="25">25%</div>
             <div class="vol-option" data-vol="10">10%</div>
-            <div class="vol-option" data-vol="0">Mute</div>
+            <div class="vol-option" data-vol="0" data-i18n="player.mute">Mute</div>
           </div>
         </div>
       </div>
       <!-- Mini controls (mobile only) -->
       <div class="np-mini-actions">
-        <button id="np-mini-pause" class="btn-icon np-btn np-btn-main" title="Play/Pause" style="width:36px;height:36px">
+        <button id="np-mini-pause" class="btn-icon np-btn np-btn-main" data-i18n-title="player.play_pause" title="Play/Pause" style="width:36px;height:36px">
           <svg id="np-mini-icon-pause" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
           <svg id="np-mini-icon-play" class="hidden" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
         </button>
-        <button id="np-mini-skip" class="btn-icon np-btn" title="Skip">
+        <button id="np-mini-skip" class="btn-icon np-btn" data-i18n-title="player.skip" title="Skip">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,4 15,12 5,20"/><rect x="17" y="4" width="3" height="16"/></svg>
         </button>
       </div>
@@ -242,14 +250,14 @@
       <div class="mp-inner">
         <!-- Header -->
         <div class="mp-header">
-          <button id="mp-close" class="btn-icon mp-header-btn" aria-label="Minimize">
+          <button id="mp-close" class="btn-icon mp-header-btn" data-i18n-aria="player.minimize" aria-label="Minimize">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
           </button>
-          <span id="mp-header-label" class="mp-header-label">Now Playing</span>
-          <button id="mp-perm-btn" class="btn-icon mp-header-btn" title="Permissions">
+          <span id="mp-header-label" class="mp-header-label" data-i18n="player.now_playing">Now Playing</span>
+          <button id="mp-perm-btn" class="btn-icon mp-header-btn" data-i18n-title="player.permissions" title="Permissions">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </button>
-          <button id="mp-queue-toggle" class="btn-icon mp-header-btn" title="Queue">
+          <button id="mp-queue-toggle" class="btn-icon mp-header-btn" data-i18n-title="player.queue_btn" title="Queue">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
           </button>
         </div>
@@ -266,7 +274,7 @@
               <div id="mp-title" class="mp-title"></div>
               <div id="mp-author" class="mp-author"></div>
             </div>
-            <button id="mp-lyrics-btn" class="btn-icon mp-icon-btn" title="Lyrics">
+            <button id="mp-lyrics-btn" class="btn-icon mp-icon-btn" data-i18n-title="player.lyrics" title="Lyrics">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 8-9.04 9.06a2.828 2.828 0 1 0 3.98 3.98L16 12"/><circle cx="17" cy="7" r="5"/></svg>
             </button>
           </div>
@@ -282,21 +290,21 @@
             </div>
           </div>
           <div class="mp-controls">
-            <button id="mp-loop" class="btn-icon mp-ctrl" title="Loop: Off">
+            <button id="mp-loop" class="btn-icon mp-ctrl" data-i18n-title="player.loop_off" title="Loop: Off">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
               <span id="mp-loop-badge" class="loop-badge hidden"></span>
             </button>
-            <button id="mp-stop" class="btn-icon mp-ctrl" title="Stop">
+            <button id="mp-stop" class="btn-icon mp-ctrl" data-i18n-title="player.stop" title="Stop">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
             </button>
-            <button id="mp-pause" class="mp-play-btn" title="Play/Pause">
+            <button id="mp-pause" class="mp-play-btn" data-i18n-title="player.play_pause" title="Play/Pause">
               <svg id="mp-icon-pause" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
               <svg id="mp-icon-play" class="hidden" width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
             </button>
-            <button id="mp-skip" class="btn-icon mp-ctrl" title="Skip">
+            <button id="mp-skip" class="btn-icon mp-ctrl" data-i18n-title="player.skip" title="Skip">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,4 15,12 5,20"/><rect x="17" y="4" width="3" height="16"/></svg>
             </button>
-            <button id="mp-vol-btn" class="btn-icon mp-ctrl" title="Volume">
+            <button id="mp-vol-btn" class="btn-icon mp-ctrl" data-i18n-title="player.volume" title="Volume">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
             </button>
           </div>
@@ -309,7 +317,7 @@
               <div class="mp-vol-opt" data-vol="50">50%</div>
               <div class="mp-vol-opt" data-vol="25">25%</div>
               <div class="mp-vol-opt" data-vol="10">10%</div>
-              <div class="mp-vol-opt" data-vol="0">Mute</div>
+              <div class="mp-vol-opt" data-vol="0" data-i18n="player.mute">Mute</div>
             </div>
           </div>
         </div>
@@ -330,10 +338,38 @@
             <span id="playlist-count" class="playlist-modal-count"></span>
           </div>
         </div>
-        <p class="playlist-modal-hint">Add this playlist to the queue?</p>
+        <p class="playlist-modal-hint" data-i18n="playlist.add_to_queue_q">Add this playlist to the queue?</p>
         <div class="playlist-modal-actions">
-          <button id="playlist-cancel" class="btn-secondary">Cancel</button>
-          <button id="playlist-confirm" class="btn-accent">Add to Queue</button>
+          <button id="playlist-cancel" class="btn-secondary" data-i18n="playlist.cancel">Cancel</button>
+          <button id="playlist-confirm" class="btn-accent" data-i18n="playlist.add_to_queue">Add to Queue</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paste Link Preview Modal -->
+    <div id="paste-modal" class="modal-overlay hidden">
+      <div class="modal-card paste-modal-card">
+        <div id="paste-loading" class="paste-loading">
+          <div class="activity-spinner"></div>
+          <p class="paste-loading-text" data-i18n="paste.loading">Loading track...</p>
+        </div>
+        <div id="paste-result" class="paste-result hidden">
+          <div class="paste-header">
+            <img id="paste-thumb" class="paste-thumb" src="" alt="">
+            <div class="paste-info">
+              <h3 id="paste-title" class="paste-title"></h3>
+              <span id="paste-author" class="paste-author"></span>
+              <span id="paste-duration" class="paste-duration"></span>
+            </div>
+          </div>
+          <div class="paste-actions">
+            <button id="paste-cancel" class="btn-secondary" data-i18n="paste.cancel">Cancel</button>
+            <button id="paste-confirm" class="btn-accent" data-i18n="paste.add_to_queue">Add to Queue</button>
+          </div>
+        </div>
+        <div id="paste-error" class="paste-error hidden">
+          <p id="paste-error-text" class="paste-error-text" data-i18n="paste.error">Could not load track</p>
+          <button id="paste-error-close" class="btn-secondary" data-i18n="paste.close">Close</button>
         </div>
       </div>
     </div>
@@ -341,10 +377,10 @@
     <!-- Voice Channel Selector Modal -->
     <div id="vc-modal" class="modal-overlay hidden">
       <div class="modal-card">
-        <h3>Select Voice Channel</h3>
-        <p class="modal-hint">You need to be in a voice channel to play music.</p>
+        <h3 data-i18n="vc_modal.title">Select Voice Channel</h3>
+        <p class="modal-hint" data-i18n="vc_modal.hint">You need to be in a voice channel to play music.</p>
         <div id="vc-list" class="vc-list"></div>
-        <button id="vc-modal-close" class="btn-secondary">Cancel</button>
+        <button id="vc-modal-close" class="btn-secondary" data-i18n="vc_modal.cancel">Cancel</button>
       </div>
     </div>
 
@@ -355,33 +391,33 @@
           <div class="pl-edit-icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           </div>
-          <h3 id="pl-edit-title">New Playlist</h3>
-          <p class="pl-edit-subtitle">Give your playlist a name and optionally a cover image.</p>
+          <h3 id="pl-edit-title" data-i18n="playlist.new_playlist">New Playlist</h3>
+          <p class="pl-edit-subtitle" data-i18n="playlist.give_name">Give your playlist a name and optionally a cover image.</p>
         </div>
         <div class="pl-edit-form">
-          <label class="pl-label">Name</label>
-          <input id="pl-edit-name" type="text" maxlength="100" placeholder="My awesome playlist" class="pl-input" autocomplete="off">
-          <label class="pl-label">Cover Image URL <span class="pl-label-hint">(optional)</span></label>
+          <label class="pl-label" data-i18n="playlist.name_label">Name</label>
+          <input id="pl-edit-name" type="text" maxlength="100" data-i18n-placeholder="playlist.name_placeholder" placeholder="My awesome playlist" class="pl-input" autocomplete="off">
+          <label class="pl-label"><span data-i18n="playlist.cover_label">Cover Image URL</span> <span class="pl-label-hint" data-i18n="playlist.optional">(optional)</span></label>
           <input id="pl-edit-image" type="url" placeholder="https://..." class="pl-input" autocomplete="off">
         </div>
         <details class="pl-import-section">
           <summary class="pl-import-toggle">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Import tracks from URL
-            <span class="pl-label-hint">— optional</span>
+            <span data-i18n="playlist.import_tracks">Import tracks from URL</span>
+            <span class="pl-label-hint" data-i18n="playlist.optional_dash">— optional</span>
           </summary>
           <div class="pl-import-content">
-            <p class="pl-import-hint">Paste a Spotify, Deezer, or YouTube playlist URL to import tracks.</p>
+            <p class="pl-import-hint" data-i18n="playlist.import_hint">Paste a Spotify, Deezer, or YouTube playlist URL to import tracks.</p>
             <div class="pl-import-row">
               <input id="pl-import-url" type="url" placeholder="https://open.spotify.com/playlist/..." class="pl-input" autocomplete="off">
-              <button id="pl-import-btn" class="btn-accent btn-sm">Import</button>
+              <button id="pl-import-btn" class="btn-accent btn-sm" data-i18n="playlist.import_btn">Import</button>
             </div>
             <div id="pl-import-status" class="pl-import-status hidden"></div>
           </div>
         </details>
         <div class="pl-edit-actions">
-          <button id="pl-edit-cancel" class="btn-secondary">Cancel</button>
-          <button id="pl-edit-save" class="btn-accent">Create</button>
+          <button id="pl-edit-cancel" class="btn-secondary" data-i18n="playlist.cancel">Cancel</button>
+          <button id="pl-edit-save" class="btn-accent" data-i18n="playlist.create">Create</button>
         </div>
       </div>
     </div>
@@ -390,31 +426,31 @@
     <div id="context-menu" class="context-menu hidden">
       <div id="ctx-add-queue" class="ctx-item">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Add to Queue
+        <span data-i18n="context_menu.add_to_queue">Add to Queue</span>
       </div>
       <div id="ctx-add-playlist" class="ctx-item ctx-has-sub">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-        Add to Playlist
+        <span data-i18n="context_menu.add_to_playlist">Add to Playlist</span>
         <svg class="ctx-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
         <div id="ctx-playlist-sub" class="ctx-submenu"></div>
       </div>
       <div id="ctx-remove-playlist" class="ctx-item ctx-danger hidden">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        Remove from Playlist
+        <span data-i18n="context_menu.remove_from_playlist">Remove from Playlist</span>
       </div>
       <!-- Queue-specific items (hidden by default) -->
       <div id="ctx-separator-queue" class="ctx-separator hidden"></div>
       <div id="ctx-play-next" class="ctx-item hidden">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/><line x1="19" y1="3" x2="19" y2="21"/></svg>
-        Play Next
+        <span data-i18n="context_menu.play_next">Play Next</span>
       </div>
       <div id="ctx-skip-to" class="ctx-item hidden">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Skip to This Track
+        <span data-i18n="context_menu.skip_to">Skip to This Track</span>
       </div>
       <div id="ctx-remove-queue" class="ctx-item ctx-danger hidden">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-        Remove from Queue
+        <span data-i18n="context_menu.remove_from_queue">Remove from Queue</span>
       </div>
     </div>
 
@@ -425,14 +461,14 @@
         <div class="perm-header">
           <div class="perm-header-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Session Permissions
+            <span data-i18n="permissions.title">Session Permissions</span>
           </div>
-          <button id="perm-close" class="btn-icon" title="Close">
+          <button id="perm-close" class="btn-icon" title="Close" data-i18n-title="permissions.close">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
         <div id="perm-body" class="perm-body">
-          <div class="perm-empty">No active session</div>
+          <div class="perm-empty" data-i18n="permissions.no_session">No active session</div>
         </div>
       </div>
     </div>
@@ -441,7 +477,7 @@
     <div id="lyrics-panel" class="lyrics-panel hidden">
       <div class="lyrics-backdrop"></div>
       <div class="lyrics-container">
-        <button id="lyrics-close" class="btn-icon lyrics-close-btn" title="Close">
+        <button id="lyrics-close" class="btn-icon lyrics-close-btn" title="Close" data-i18n-title="lyrics.close">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
         </button>
         <div class="lyrics-track-header">
@@ -453,7 +489,7 @@
         </div>
         <div id="lyrics-body" class="lyrics-scroll">
           <div class="lyrics-spacer-top"></div>
-          <p class="lyrics-loading">Loading lyrics...</p>
+          <p class="lyrics-loading" data-i18n="lyrics.loading">Loading lyrics...</p>
           <div class="lyrics-spacer-bottom"></div>
         </div>
         <div id="lyrics-source" class="lyrics-source-tag"></div>
@@ -465,6 +501,122 @@
   <!-- Toast Container -->
   <div id="toast-container" class="toast-container"></div>
 
-      <script src="script.js?v=6"></script>
+  <!-- Preferences Modal (Language + Theme) -->
+  <div id="lang-modal" class="modal-overlay hidden">
+    <div class="modal-card lang-modal-card">
+      <h3 data-i18n="lang_prompt.title">Choose your language</h3>
+      <p class="lang-subtitle" data-i18n="lang_prompt.subtitle">Select your preferred language</p>
+      <div class="lang-grid">
+        <button class="lang-option" data-locale="pt"><span class="lang-flag">🇧🇷</span><span class="lang-name">Português</span></button>
+        <button class="lang-option" data-locale="en"><span class="lang-flag">🇺🇸</span><span class="lang-name">English</span></button>
+        <button class="lang-option" data-locale="es"><span class="lang-flag">🇪🇸</span><span class="lang-name">Español</span></button>
+        <button class="lang-option" data-locale="fr"><span class="lang-flag">🇫🇷</span><span class="lang-name">Français</span></button>
+        <button class="lang-option" data-locale="it"><span class="lang-flag">🇮🇹</span><span class="lang-name">Italiano</span></button>
+        <button class="lang-option" data-locale="ja"><span class="lang-flag">🇯🇵</span><span class="lang-name">日本語</span></button>
+        <button class="lang-option" data-locale="pt-pt"><span class="lang-flag">🇵🇹</span><span class="lang-name">Português (PT)</span></button>
+        <button class="lang-option" data-locale="ru"><span class="lang-flag">🇷🇺</span><span class="lang-name">Русский</span></button>
+        <button class="lang-option" data-locale="tr"><span class="lang-flag">🇹🇷</span><span class="lang-name">Türkçe</span></button>
+      </div>
+      <div class="prefs-divider"></div>
+      <h3 class="prefs-section-title" data-i18n="theme.title">Appearance</h3>
+      <p class="prefs-section-subtitle" data-i18n="theme.subtitle">Choose a theme</p>
+      <div class="theme-grid">
+        <button class="theme-option active" data-theme="default">
+          <div class="theme-preview">
+            <span style="background:#0d0d0d"></span>
+            <span style="background:#111111"></span>
+            <span style="background:#e8365d"></span>
+            <span style="background:#1a1a1a"></span>
+          </div>
+          <span class="theme-name">Midnight</span>
+        </button>
+        <button class="theme-option" data-theme="material">
+          <div class="theme-preview">
+            <span style="background:#0F0D13"></span>
+            <span style="background:#1D1B20"></span>
+            <span style="background:#D0BCFF"></span>
+            <span style="background:#211F26"></span>
+          </div>
+          <span class="theme-name">Material Expressive</span>
+        </button>
+        <button class="theme-option" data-theme="gingerbread">
+          <div class="theme-preview" style="border-radius: 2px;">
+            <span style="background:#000000"></span>
+            <span style="background:linear-gradient(to bottom, #303030, #111)"></span>
+            <span style="background:#A4C639"></span>
+            <span style="background:linear-gradient(to bottom, #FF9900, #CC6600)"></span>
+          </div>
+          <span class="theme-name">Android 2.3</span>
+        </button>
+        <button class="theme-option" data-theme="win98">
+          <div class="theme-preview" style="border-radius: 0; border: 2px solid #c0c0c0; border-top-color: #fff; border-left-color: #fff; border-bottom-color: #000; border-right-color: #000;">
+            <span style="background:#008080"></span>
+            <span style="background:#c0c0c0"></span>
+            <span style="background:#000080"></span>
+            <span style="background:#c0c0c0"></span>
+          </div>
+          <span class="theme-name">Windows 98</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Transfer Admin Modal -->
+  <div id="confirm-modal" class="modal-overlay hidden">
+    <div class="modal-card confirm-modal-card">
+      <p id="confirm-modal-text" data-i18n="confirm_modal.transfer_admin">Wanna transfer admin rights?</p>
+      <div class="confirm-modal-actions">
+        <button id="confirm-modal-no" class="btn-secondary" type="button" data-i18n="confirm_modal.cancel">Cancel</button>
+        <button id="confirm-modal-yes" class="btn-accent" type="button" data-i18n="confirm_modal.transfer">Transfer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bug Report Button -->
+  <button id="btn-bug-report" class="bug-report-btn" title="Report a Bug" data-i18n-title="bug_report.btn_title">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  </button>
+
+  <!-- Bug Report Modal -->
+  <div id="bug-modal" class="modal-overlay hidden">
+    <div class="modal-card bug-modal-card">
+      <h3 data-i18n="bug_report.title">Report a Bug</h3>
+      <form id="bug-form" class="bug-form">
+        <label class="bug-label">
+          <span data-i18n="bug_report.category_label">What are you having trouble with?</span>
+          <select id="bug-category" class="bug-select" required>
+            <option value="" disabled selected data-i18n="bug_report.category_placeholder">Select a category</option>
+            <option value="Music Playback" data-i18n="bug_report.cat_playback">Music Playback</option>
+            <option value="Queue" data-i18n="bug_report.cat_queue">Queue</option>
+            <option value="Search" data-i18n="bug_report.cat_search">Search</option>
+            <option value="Discord Activity" data-i18n="bug_report.cat_activity">Discord Activity</option>
+            <option value="Playlists" data-i18n="bug_report.cat_playlists">Playlists</option>
+            <option value="Lyrics" data-i18n="bug_report.cat_lyrics">Lyrics</option>
+            <option value="Login / Auth" data-i18n="bug_report.cat_auth">Login / Auth</option>
+            <option value="Visual / UI" data-i18n="bug_report.cat_ui">Visual / UI</option>
+            <option value="Other" data-i18n="bug_report.cat_other">Other</option>
+          </select>
+        </label>
+        <label class="bug-label">
+          <span data-i18n="bug_report.subject_label">Subject</span>
+          <input id="bug-subject" type="text" class="bug-input" data-i18n-placeholder="bug_report.subject_placeholder" placeholder="Brief summary of the issue" maxlength="100" required>
+        </label>
+        <label class="bug-label">
+          <span data-i18n="bug_report.description_label">Tell us what happened</span>
+          <textarea id="bug-description" class="bug-textarea" data-i18n-placeholder="bug_report.description_placeholder" placeholder="Describe the bug in detail..." maxlength="2000" rows="4" required></textarea>
+        </label>
+        <label class="bug-checkbox-label">
+          <input id="bug-contact" type="checkbox" class="bug-checkbox">
+          <span data-i18n="bug_report.contact_label">You allow us to contact you via Discord about this report</span>
+        </label>
+        <div class="bug-actions">
+          <button type="button" id="bug-cancel" class="btn-secondary" data-i18n="bug_report.cancel">Cancel</button>
+          <button type="submit" id="bug-submit" class="btn-accent" data-i18n="bug_report.submit">Send Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+      <script src="script.js?v=30"></script>
 </body>
 </html>
