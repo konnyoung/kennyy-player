@@ -35,7 +35,10 @@
     "reordered": "Cola reordenada",
     "join_vc": "Únete a un canal de voz en este servidor para empezar a reproducir",
     "wrong_channel": "No estás en el mismo canal que el bot",
-    "wrong_channel_hint": "Únete al canal {channel} para controlar la reproducción."
+    "wrong_channel_hint": "Únete al canal {channel} para controlar la reproducción.",
+    "none_selected": "0 seleccionadas",
+    "n_selected": "{n} seleccionadas",
+    "removed_n": "{n} pistas eliminadas"
   },
   "player": {
     "now_playing": "Reproduciendo Ahora",
@@ -104,6 +107,7 @@
     "import_btn": "Importar",
     "importing": "Importando pistas...",
     "imported_tracks": "Importadas {count} pista(s)",
+    "imported_from": "de \"{name}\"",
     "failed_import_create": "Error al crear playlist",
     "playlist_updated": "Playlist actualizada",
     "playlist_created": "Playlist creada",
@@ -131,6 +135,7 @@
     "play_next": "Reproducir Siguiente",
     "skip_to": "Saltar a Esta Pista",
     "remove_from_queue": "Quitar de la Cola",
+    "select": "Seleccionar",
     "added_to_queue": "Añadido a la cola",
     "removed_from_playlist": "Quitado de la playlist",
     "moved_to_next": "Movido a siguiente",
@@ -149,7 +154,13 @@
     "failed_update": "Error al actualizar permiso",
     "admin_transferred": "Admin transferido a {name}",
     "failed_transfer": "Error al transferir admin",
-    "give_admin": "Dar Admin"
+    "give_admin": "Dar Admin",
+    "admin_badge": "Admin",
+    "you_badge": "tú",
+    "perm_add_tracks": "Añadir canciones a la cola",
+    "perm_remove_tracks": "Eliminar canciones",
+    "perm_control_player": "Controlar reproductor",
+    "perm_reorder_queue": "Reordenar cola"
   },
   "confirm_modal": {
     "transfer_admin": "¿Quieres transferir los derechos de admin?",
@@ -158,6 +169,7 @@
     "transfer": "Transferir"
   },
   "lyrics": {
+    "panel_title": "Letras",
     "close": "Cerrar",
     "loading": "Cargando letra...",
     "not_found": "No se encontró letra para esta pista.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "¡Las transmisiones en vivo no son compatibles!",
     "error_prefix": "Error: {message}",
     "language": "Idioma",
-    "rate_limited": "Demasiadas solicitudes. Espere un momento..."
+    "rate_limited": "Demasiadas solicitudes. Espere un momento...",
+    "settings": "Configuración"
   },
   "lang_prompt": {
     "title": "Elige tu idioma",
-    "subtitle": "Selecciona tu idioma preferido"
+    "subtitle": "Selecciona tu idioma preferido",
+    "save": "Guardar"
+  },
+  "theme": {
+    "title": "Apariencia",
+    "subtitle": "Elige un tema"
   }
 }

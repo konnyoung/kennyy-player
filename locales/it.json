@@ -35,7 +35,10 @@
     "reordered": "Coda riordinata",
     "join_vc": "Unisciti a un canale vocale su questo server per iniziare a riprodurre",
     "wrong_channel": "Non sei nello stesso canale del bot",
-    "wrong_channel_hint": "Unisciti al canale {channel} per controllare la riproduzione."
+    "wrong_channel_hint": "Unisciti al canale {channel} per controllare la riproduzione.",
+    "none_selected": "0 selezionate",
+    "n_selected": "{n} selezionate",
+    "removed_n": "{n} tracce rimosse"
   },
   "player": {
     "now_playing": "In Riproduzione",
@@ -104,6 +107,7 @@
     "import_btn": "Importa",
     "importing": "Importazione tracce...",
     "imported_tracks": "{count} traccia/e importata/e",
+    "imported_from": "da \"{name}\"",
     "failed_import_create": "Errore nella creazione della playlist",
     "playlist_updated": "Playlist aggiornata",
     "playlist_created": "Playlist creata",
@@ -131,6 +135,7 @@
     "play_next": "Riproduci Dopo",
     "skip_to": "Salta a Questa Traccia",
     "remove_from_queue": "Rimuovi dalla Coda",
+    "select": "Seleziona",
     "added_to_queue": "Aggiunto alla coda",
     "removed_from_playlist": "Rimosso dalla playlist",
     "moved_to_next": "Spostato al prossimo",
@@ -149,7 +154,13 @@
     "failed_update": "Errore nell'aggiornamento del permesso",
     "admin_transferred": "Admin trasferito a {name}",
     "failed_transfer": "Errore nel trasferimento dell'admin",
-    "give_admin": "Dare Admin"
+    "give_admin": "Dare Admin",
+    "admin_badge": "Admin",
+    "you_badge": "tu",
+    "perm_add_tracks": "Aggiungi brani alla coda",
+    "perm_remove_tracks": "Rimuovi brani",
+    "perm_control_player": "Controlla il lettore",
+    "perm_reorder_queue": "Riordina la coda"
   },
   "confirm_modal": {
     "transfer_admin": "Vuoi trasferire i diritti di admin?",
@@ -158,6 +169,7 @@
     "transfer": "Trasferisci"
   },
   "lyrics": {
+    "panel_title": "Testi",
     "close": "Chiudi",
     "loading": "Caricamento testo...",
     "not_found": "Nessun testo trovato per questa traccia.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "Le dirette non sono supportate!",
     "error_prefix": "Errore: {message}",
     "language": "Lingua",
-    "rate_limited": "Troppe richieste. Attendere un momento..."
+    "rate_limited": "Troppe richieste. Attendere un momento...",
+    "settings": "Impostazioni"
   },
   "lang_prompt": {
     "title": "Scegli la tua lingua",
-    "subtitle": "Seleziona la tua lingua preferita"
+    "subtitle": "Seleziona la tua lingua preferita",
+    "save": "Salva"
+  },
+  "theme": {
+    "title": "Aspetto",
+    "subtitle": "Scegli un tema"
   }
 }

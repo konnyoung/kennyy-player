@@ -35,7 +35,10 @@
     "reordered": "Queue reordered",
     "join_vc": "Join a voice channel on this server to start playing",
     "wrong_channel": "You are not in the same channel as the bot",
-    "wrong_channel_hint": "Join channel {channel} to control playback."
+    "wrong_channel_hint": "Join channel {channel} to control playback.",
+    "none_selected": "0 selected",
+    "n_selected": "{n} selected",
+    "removed_n": "Removed {n} tracks"
   },
   "player": {
     "now_playing": "Now Playing",
@@ -104,6 +107,7 @@
     "import_btn": "Import",
     "importing": "Importing tracks...",
     "imported_tracks": "Imported {count} track(s)",
+    "imported_from": "from \"{name}\"",
     "failed_import_create": "Failed to create playlist",
     "playlist_updated": "Playlist updated",
     "playlist_created": "Playlist created",
@@ -131,6 +135,7 @@
     "play_next": "Play Next",
     "skip_to": "Skip to This Track",
     "remove_from_queue": "Remove from Queue",
+    "select": "Select",
     "added_to_queue": "Added to queue",
     "removed_from_playlist": "Removed from playlist",
     "moved_to_next": "Moved to next",
@@ -149,7 +154,13 @@
     "failed_update": "Failed to update permission",
     "admin_transferred": "Admin transferred to {name}",
     "failed_transfer": "Failed to transfer admin",
-    "give_admin": "Give Admin"
+    "give_admin": "Give Admin",
+    "admin_badge": "Admin",
+    "you_badge": "you",
+    "perm_add_tracks": "Add songs to queue",
+    "perm_remove_tracks": "Remove songs",
+    "perm_control_player": "Control player",
+    "perm_reorder_queue": "Reorder queue"
   },
   "confirm_modal": {
     "transfer_admin": "Wanna transfer admin rights?",
@@ -158,6 +169,7 @@
     "transfer": "Transfer"
   },
   "lyrics": {
+    "panel_title": "Lyrics",
     "close": "Close",
     "loading": "Loading lyrics...",
     "not_found": "No lyrics found for this track.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "Lives are not supported!",
     "error_prefix": "Error: {message}",
     "language": "Language",
-    "rate_limited": "Too many requests. Please wait a moment..."
+    "rate_limited": "Too many requests. Please wait a moment...",
+    "settings": "Settings"
   },
   "lang_prompt": {
     "title": "Choose your language",
-    "subtitle": "Select your preferred language"
+    "subtitle": "Select your preferred language",
+    "save": "Save"
+  },
+  "theme": {
+    "title": "Appearance",
+    "subtitle": "Choose a theme"
   }
 }

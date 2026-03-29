@@ -35,7 +35,10 @@
     "reordered": "キューを並べ替えました",
     "join_vc": "再生を開始するにはこのサーバーのボイスチャンネルに参加してください",
     "wrong_channel": "ボットと同じチャンネルにいません",
-    "wrong_channel_hint": "再生を操作するには{channel}チャンネルに参加してください。"
+    "wrong_channel_hint": "再生を操作するには{channel}チャンネルに参加してください。",
+    "none_selected": "0件選択",
+    "n_selected": "{n}件選択",
+    "removed_n": "{n}曲を削除しました"
   },
   "player": {
     "now_playing": "再生中",
@@ -104,6 +107,7 @@
     "import_btn": "インポート",
     "importing": "トラックをインポート中...",
     "imported_tracks": "{count}トラックをインポートしました",
+    "imported_from": "「{name}」から",
     "failed_import_create": "プレイリストの作成に失敗しました",
     "playlist_updated": "プレイリストを更新しました",
     "playlist_created": "プレイリストを作成しました",
@@ -131,6 +135,7 @@
     "play_next": "次に再生",
     "skip_to": "このトラックにスキップ",
     "remove_from_queue": "キューから削除",
+    "select": "選択",
     "added_to_queue": "キューに追加しました",
     "removed_from_playlist": "プレイリストから削除しました",
     "moved_to_next": "次に移動しました",
@@ -149,7 +154,13 @@
     "failed_update": "権限の更新に失敗しました",
     "admin_transferred": "{name}に管理者を移譲しました",
     "failed_transfer": "管理者の移譲に失敗しました",
-    "give_admin": "管理者を付与"
+    "give_admin": "管理者を付与",
+    "admin_badge": "管理者",
+    "you_badge": "あなた",
+    "perm_add_tracks": "キューに曲を追加",
+    "perm_remove_tracks": "曲を削除",
+    "perm_control_player": "プレーヤーを操作",
+    "perm_reorder_queue": "キューを並べ替え"
   },
   "confirm_modal": {
     "transfer_admin": "管理者権限を移譲しますか？",
@@ -158,6 +169,7 @@
     "transfer": "移譲"
   },
   "lyrics": {
+    "panel_title": "歌詞",
     "close": "閉じる",
     "loading": "歌詞を読み込み中...",
     "not_found": "このトラックの歌詞が見つかりません。",
@@ -201,10 +213,16 @@
     "lives_not_supported": "ライブ配信はサポートされていません！",
     "error_prefix": "エラー：{message}",
     "language": "言語",
-    "rate_limited": "リクエストが多すぎます。しばらくお待ちください..."
+    "rate_limited": "リクエストが多すぎます。しばらくお待ちください...",
+    "settings": "設定"
   },
   "lang_prompt": {
     "title": "言語を選択してください",
-    "subtitle": "お好みの言語を選択してください"
+    "subtitle": "お好みの言語を選択してください",
+    "save": "保存"
+  },
+  "theme": {
+    "title": "外観",
+    "subtitle": "テーマを選択してください"
   }
 }

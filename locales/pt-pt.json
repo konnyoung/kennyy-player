@@ -35,7 +35,10 @@
     "reordered": "Fila reordenada",
     "join_vc": "Entra num canal de voz neste servidor para começar a tocar",
     "wrong_channel": "Não estás no mesmo canal que o bot",
-    "wrong_channel_hint": "Entra no canal {channel} para controlar a reprodução."
+    "wrong_channel_hint": "Entra no canal {channel} para controlar a reprodução.",
+    "none_selected": "0 selecionadas",
+    "n_selected": "{n} selecionadas",
+    "removed_n": "{n} faixas removidas"
   },
   "player": {
     "now_playing": "A Tocar Agora",
@@ -104,6 +107,7 @@
     "import_btn": "Importar",
     "importing": "A importar faixas...",
     "imported_tracks": "{count} faixa(s) importada(s)",
+    "imported_from": "de \"{name}\"",
     "failed_import_create": "Falha ao criar playlist",
     "playlist_updated": "Playlist atualizada",
     "playlist_created": "Playlist criada",
@@ -131,6 +135,7 @@
     "play_next": "Tocar a Seguir",
     "skip_to": "Saltar para Esta Faixa",
     "remove_from_queue": "Remover da Fila",
+    "select": "Selecionar",
     "added_to_queue": "Adicionado à fila",
     "removed_from_playlist": "Removido da playlist",
     "moved_to_next": "Movido para a seguir",
@@ -149,7 +154,13 @@
     "failed_update": "Falha ao atualizar permissão",
     "admin_transferred": "Admin transferido para {name}",
     "failed_transfer": "Falha ao transferir admin",
-    "give_admin": "Dar Admin"
+    "give_admin": "Dar Admin",
+    "admin_badge": "Admin",
+    "you_badge": "tu",
+    "perm_add_tracks": "Adicionar músicas à fila",
+    "perm_remove_tracks": "Remover músicas",
+    "perm_control_player": "Controlar leitor",
+    "perm_reorder_queue": "Reordenar fila"
   },
   "confirm_modal": {
     "transfer_admin": "Queres transferir os direitos de admin?",
@@ -158,6 +169,7 @@
     "transfer": "Transferir"
   },
   "lyrics": {
+    "panel_title": "Letras",
     "close": "Fechar",
     "loading": "A carregar letra...",
     "not_found": "Nenhuma letra encontrada para esta faixa.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "Lives não são suportadas!",
     "error_prefix": "Erro: {message}",
     "language": "Idioma",
-    "rate_limited": "Demasiados pedidos. Aguarde um momento..."
+    "rate_limited": "Demasiados pedidos. Aguarde um momento...",
+    "settings": "Definições"
   },
   "lang_prompt": {
     "title": "Escolhe o teu idioma",
-    "subtitle": "Seleciona o teu idioma preferido"
+    "subtitle": "Seleciona o teu idioma preferido",
+    "save": "Guardar"
+  },
+  "theme": {
+    "title": "Aparência",
+    "subtitle": "Escolha um tema"
   }
 }

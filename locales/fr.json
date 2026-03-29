@@ -35,7 +35,10 @@
     "reordered": "File réorganisée",
     "join_vc": "Rejoignez un salon vocal sur ce serveur pour commencer à écouter",
     "wrong_channel": "Vous n'êtes pas dans le même salon que le bot",
-    "wrong_channel_hint": "Rejoignez le salon {channel} pour contrôler la lecture."
+    "wrong_channel_hint": "Rejoignez le salon {channel} pour contrôler la lecture.",
+    "none_selected": "0 sélectionnées",
+    "n_selected": "{n} sélectionnées",
+    "removed_n": "{n} pistes supprimées"
   },
   "player": {
     "now_playing": "En Lecture",
@@ -104,6 +107,7 @@
     "import_btn": "Importer",
     "importing": "Importation des pistes...",
     "imported_tracks": "{count} piste(s) importée(s)",
+    "imported_from": "depuis \"{name}\"",
     "failed_import_create": "Échec de la création de playlist",
     "playlist_updated": "Playlist mise à jour",
     "playlist_created": "Playlist créée",
@@ -131,6 +135,7 @@
     "play_next": "Lire Ensuite",
     "skip_to": "Passer à Cette Piste",
     "remove_from_queue": "Retirer de la File",
+    "select": "Sélectionner",
     "added_to_queue": "Ajouté à la file",
     "removed_from_playlist": "Retiré de la playlist",
     "moved_to_next": "Déplacé en suivant",
@@ -149,7 +154,13 @@
     "failed_update": "Échec de la mise à jour des permissions",
     "admin_transferred": "Admin transféré à {name}",
     "failed_transfer": "Échec du transfert d'admin",
-    "give_admin": "Donner Admin"
+    "give_admin": "Donner Admin",
+    "admin_badge": "Admin",
+    "you_badge": "vous",
+    "perm_add_tracks": "Ajouter des morceaux à la file",
+    "perm_remove_tracks": "Supprimer des morceaux",
+    "perm_control_player": "Contrôler le lecteur",
+    "perm_reorder_queue": "Réorganiser la file"
   },
   "confirm_modal": {
     "transfer_admin": "Voulez-vous transférer les droits d'admin ?",
@@ -158,6 +169,7 @@
     "transfer": "Transférer"
   },
   "lyrics": {
+    "panel_title": "Paroles",
     "close": "Fermer",
     "loading": "Chargement des paroles...",
     "not_found": "Aucune parole trouvée pour cette piste.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "Les lives ne sont pas pris en charge !",
     "error_prefix": "Erreur : {message}",
     "language": "Langue",
-    "rate_limited": "Trop de requêtes. Veuillez patienter..."
+    "rate_limited": "Trop de requêtes. Veuillez patienter...",
+    "settings": "Paramètres"
   },
   "lang_prompt": {
     "title": "Choisissez votre langue",
-    "subtitle": "Sélectionnez votre langue préférée"
+    "subtitle": "Sélectionnez votre langue préférée",
+    "save": "Enregistrer"
+  },
+  "theme": {
+    "title": "Apparence",
+    "subtitle": "Choisissez un thème"
   }
 }

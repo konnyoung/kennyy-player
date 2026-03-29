@@ -1832,7 +1832,7 @@ function renderUserPlaylists() {
     el.dataset.id = p.id;
 
     const thumb = p.image
-      ? `<img class="playlist-item-thumb" src="${sanitize(p.image)}" alt="">`
+      ? `<img class="playlist-item-thumb" src="${sanitize(proxifyImageUrl(p.image))}" alt="">`
       : `<div class="playlist-item-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>`;
 
     el.innerHTML = `
@@ -2319,12 +2319,12 @@ async function ctxRemoveFromQueue() {
 }
 
 // ── Event Bindings ──
-btnLogin.onclick = () => { window.location.href = OAUTH_URL; };
-btnLogout.onclick = logout;
+if (btnLogin) btnLogin.onclick = () => { window.location.href = OAUTH_URL; };
+if (btnLogout) btnLogout.onclick = logout;
 
 // ── Language Picker ──
-btnLang.onclick = () => showLanguagePrompt();
-langModal.onclick = (e) => { if (e.target === langModal) hideLanguagePrompt(); };
+if (btnLang) btnLang.onclick = () => showLanguagePrompt();
+if (langModal) langModal.onclick = (e) => { if (e.target === langModal) hideLanguagePrompt(); };
 langModal.querySelectorAll('.lang-option').forEach(btn => {
   btn.onclick = () => {
     setLocale(btn.dataset.locale);
@@ -2340,28 +2340,30 @@ btnToggleServers.onclick = () => {
   const isCollapsed = guildOtherSection.classList.contains('collapsed');
   localStorage.setItem('kennyy_servers_collapsed', isCollapsed);
 };
-btnPause.onclick = togglePause;
-btnSkip.onclick = skip;
-btnStop.onclick = stopPlayer;
-btnLoop.onclick = cycleLoop;
-btnLyrics.onclick = showLyrics;
-lyricsClose.onclick = closeLyrics;
-searchInput.oninput = handleSearch;
-searchInput.addEventListener('paste', handlePaste);
-npProgressBar.onclick = handleProgressClick;
-vcModalClose.onclick = () => vcModal.classList.add('hidden');
-playlistConfirm.onclick = confirmPlaylist;
-playlistCancel.onclick = hidePlaylistModal;
-playlistModal.onclick = (e) => { if (e.target === playlistModal) hidePlaylistModal(); };
-pasteCancel.onclick = hidePasteModal;
-pasteErrorClose.onclick = hidePasteModal;
-pasteModal.onclick = (e) => { if (e.target === pasteModal) hidePasteModal(); };
+if (btnPause) btnPause.onclick = togglePause;
+if (btnSkip) btnSkip.onclick = skip;
+if (btnStop) btnStop.onclick = stopPlayer;
+if (btnLoop) btnLoop.onclick = cycleLoop;
+if (btnLyrics) btnLyrics.onclick = showLyrics;
+if (lyricsClose) lyricsClose.onclick = closeLyrics;
+if (searchInput) {
+  searchInput.oninput = handleSearch;
+  searchInput.addEventListener('paste', handlePaste);
+}
+if (npProgressBar) npProgressBar.onclick = handleProgressClick;
+if (vcModalClose) vcModalClose.onclick = () => vcModal.classList.add('hidden');
+if (playlistConfirm) playlistConfirm.onclick = confirmPlaylist;
+if (playlistCancel) playlistCancel.onclick = hidePlaylistModal;
+if (playlistModal) playlistModal.onclick = (e) => { if (e.target === playlistModal) hidePlaylistModal(); };
+if (pasteCancel) pasteCancel.onclick = hidePasteModal;
+if (pasteErrorClose) pasteErrorClose.onclick = hidePasteModal;
+if (pasteModal) pasteModal.onclick = (e) => { if (e.target === pasteModal) hidePasteModal(); };
 
 // ── Bug Report ──
-btnBugReport.onclick = () => bugModal.classList.remove('hidden');
-bugCancel.onclick = () => bugModal.classList.add('hidden');
-bugModal.onclick = (e) => { if (e.target === bugModal) bugModal.classList.add('hidden'); };
-bugForm.onsubmit = async (e) => {
+if (btnBugReport) btnBugReport.onclick = () => bugModal.classList.remove('hidden');
+if (bugCancel) bugCancel.onclick = () => bugModal.classList.add('hidden');
+if (bugModal) bugModal.onclick = (e) => { if (e.target === bugModal) bugModal.classList.add('hidden'); };
+if (bugForm) bugForm.onsubmit = async (e) => {
   e.preventDefault();
   bugSubmit.classList.add('bug-submit-loading');
   bugSubmit.textContent = t('bug_report.sending');
@@ -2441,33 +2443,33 @@ if (mobilePlayer) {
 }
 
 // Playlist management bindings
-btnCreatePlaylist.onclick = openCreatePlaylist;
-plEditCancel.onclick = () => { pendingTrackForNewPlaylist = null; plEditModal.classList.add('hidden'); };
-plEditSave.onclick = savePlaylist;
-plImportBtn.onclick = importToPlaylist;
-plEditModal.onclick = (e) => { if (e.target === plEditModal) { pendingTrackForNewPlaylist = null; plEditModal.classList.add('hidden'); } };
+if (btnCreatePlaylist) btnCreatePlaylist.onclick = openCreatePlaylist;
+if (plEditCancel) plEditCancel.onclick = () => { pendingTrackForNewPlaylist = null; plEditModal.classList.add('hidden'); };
+if (plEditSave) plEditSave.onclick = savePlaylist;
+if (plImportBtn) plImportBtn.onclick = importToPlaylist;
+if (plEditModal) plEditModal.onclick = (e) => { if (e.target === plEditModal) { pendingTrackForNewPlaylist = null; plEditModal.classList.add('hidden'); } };
 
 // Playlist view bindings
-pvBack.onclick = closePlaylistView;
-pvPlay.onclick = () => { if (viewingPlaylistId) playUserPlaylist(viewingPlaylistId); };
-pvShuffle.onclick = () => { if (viewingPlaylistId) playUserPlaylist(viewingPlaylistId); }; // TODO: shuffle mode
-pvEdit.onclick = () => { if (viewingPlaylistId) openEditPlaylist(viewingPlaylistId); };
-pvExport.onclick = () => { if (viewingPlaylistId) exportUserPlaylist(viewingPlaylistId); };
-pvDelete.onclick = () => { if (viewingPlaylistId) deleteUserPlaylist(viewingPlaylistId); };
+if (pvBack) pvBack.onclick = closePlaylistView;
+if (pvPlay) pvPlay.onclick = () => { if (viewingPlaylistId) playUserPlaylist(viewingPlaylistId); };
+if (pvShuffle) pvShuffle.onclick = () => { if (viewingPlaylistId) playUserPlaylist(viewingPlaylistId); }; // TODO: shuffle mode
+if (pvEdit) pvEdit.onclick = () => { if (viewingPlaylistId) openEditPlaylist(viewingPlaylistId); };
+if (pvExport) pvExport.onclick = () => { if (viewingPlaylistId) exportUserPlaylist(viewingPlaylistId); };
+if (pvDelete) pvDelete.onclick = () => { if (viewingPlaylistId) deleteUserPlaylist(viewingPlaylistId); };
 
 // Context menu bindings
-ctxAddQueue.onclick = ctxAddToQueue;
-ctxRemovePlaylist.onclick = ctxRemoveFromPlaylist;
-ctxSkipTo.onclick = ctxSkipToTrack;
-ctxPlayNext.onclick = ctxMovePlayNext;
-ctxRemoveQueue.onclick = ctxRemoveFromQueue;
+if (ctxAddQueue) ctxAddQueue.onclick = ctxAddToQueue;
+if (ctxRemovePlaylist) ctxRemovePlaylist.onclick = ctxRemoveFromPlaylist;
+if (ctxSkipTo) ctxSkipTo.onclick = ctxSkipToTrack;
+if (ctxPlayNext) ctxPlayNext.onclick = ctxMovePlayNext;
+if (ctxRemoveQueue) ctxRemoveQueue.onclick = ctxRemoveFromQueue;
 document.addEventListener('click', (e) => {
   // Close context menu
   if (!e.target.closest('.context-menu')) hideContextMenu();
   // Close search results
-  if (!e.target.closest('.search-box')) searchResults.classList.add('hidden');
+  if (!e.target.closest('.search-box')) searchResults?.classList.add('hidden');
   // Close volume dropdown
-  if (!e.target.closest('.volume-wrap')) volumeDropdown.classList.add('hidden');
+  if (!e.target.closest('.volume-wrap')) volumeDropdown?.classList.add('hidden');
 });
 document.addEventListener('contextmenu', (e) => {
   if (!e.target.closest('.pv-track') && !e.target.closest('.search-result-item') && !e.target.closest('.queue-item')) {
@@ -2475,11 +2477,11 @@ document.addEventListener('contextmenu', (e) => {
   }
 });
 
-btnVolume.onclick = (e) => {
+if (btnVolume) btnVolume.onclick = (e) => {
   e.stopPropagation();
   volumeDropdown.classList.toggle('hidden');
 };
-volumeDropdown.onclick = async (e) => {
+if (volumeDropdown) volumeDropdown.onclick = async (e) => {
   const opt = e.target.closest('.vol-option');
   if (!opt) return;
   volumeDropdown.classList.add('hidden');
@@ -2488,7 +2490,7 @@ volumeDropdown.onclick = async (e) => {
 };
 
 // Close lyrics panel when clicking backdrop
-lyricsPanel.querySelector('.lyrics-backdrop').addEventListener('click', closeLyrics);
+lyricsPanel?.querySelector('.lyrics-backdrop')?.addEventListener('click', closeLyrics);
 
 // ── Permissions Panel ──
 let permissionsOpen = false;

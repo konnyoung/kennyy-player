@@ -35,7 +35,10 @@
     "reordered": "Sıra yeniden düzenlendi",
     "join_vc": "Çalmaya başlamak için bu sunucuda bir sesli kanala katıl",
     "wrong_channel": "Bot ile aynı kanalda değilsin",
-    "wrong_channel_hint": "Oynatmayı kontrol etmek için {channel} kanalına katıl."
+    "wrong_channel_hint": "Oynatmayı kontrol etmek için {channel} kanalına katıl.",
+    "none_selected": "0 seçili",
+    "n_selected": "{n} seçili",
+    "removed_n": "{n} parça kaldırıldı"
   },
   "player": {
     "now_playing": "Şimdi Çalıyor",
@@ -104,6 +107,7 @@
     "import_btn": "İçe Aktar",
     "importing": "Parçalar içe aktarılıyor...",
     "imported_tracks": "{count} parça içe aktarıldı",
+    "imported_from": "\"{name}\" kaynağından",
     "failed_import_create": "Çalma listesi oluşturulamadı",
     "playlist_updated": "Çalma listesi güncellendi",
     "playlist_created": "Çalma listesi oluşturuldu",
@@ -131,6 +135,7 @@
     "play_next": "Sonraki Olarak Çal",
     "skip_to": "Bu Parçaya Atla",
     "remove_from_queue": "Sıradan Kaldır",
+    "select": "Seç",
     "added_to_queue": "Sıraya eklendi",
     "removed_from_playlist": "Çalma listesinden kaldırıldı",
     "moved_to_next": "Sonrakine taşındı",
@@ -149,7 +154,13 @@
     "failed_update": "İzin güncellenemedi",
     "admin_transferred": "Yönetici {name} kişisine aktarıldı",
     "failed_transfer": "Yönetici aktarılamadı",
-    "give_admin": "Yönetici Ver"
+    "give_admin": "Yönetici Ver",
+    "admin_badge": "Yönetici",
+    "you_badge": "sen",
+    "perm_add_tracks": "Sıraya şarkı ekle",
+    "perm_remove_tracks": "Şarkıları kaldır",
+    "perm_control_player": "Oynatıcıyı kontrol et",
+    "perm_reorder_queue": "Sırayı yeniden düzenle"
   },
   "confirm_modal": {
     "transfer_admin": "Yönetici haklarını aktarmak istiyor musun?",
@@ -158,6 +169,7 @@
     "transfer": "Aktar"
   },
   "lyrics": {
+    "panel_title": "Sözler",
     "close": "Kapat",
     "loading": "Şarkı sözü yükleniyor...",
     "not_found": "Bu parça için şarkı sözü bulunamadı.",
@@ -201,10 +213,16 @@
     "lives_not_supported": "Canlı yayınlar desteklenmiyor!",
     "error_prefix": "Hata: {message}",
     "language": "Dil",
-    "rate_limited": "Çok fazla istek. Lütfen bir süre bekleyin..."
+    "rate_limited": "Çok fazla istek. Lütfen bir süre bekleyin...",
+    "settings": "Ayarlar"
   },
   "lang_prompt": {
     "title": "Dilinizi seçin",
-    "subtitle": "Tercih ettiğiniz dili seçin"
+    "subtitle": "Tercih ettiğiniz dili seçin",
+    "save": "Kaydet"
+  },
+  "theme": {
+    "title": "Görünüm",
+    "subtitle": "Tema seçin"
   }
 }

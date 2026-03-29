@@ -108,6 +108,32 @@
           <span class="col-added" data-i18n="queue.added_by">Added by</span>
           <span class="col-dur" data-i18n="queue.duration">Duration</span>
         </div>
+
+        <!-- Selection action bar (hidden until selection mode) -->
+        <div id="queue-select-bar" class="queue-select-bar hidden">
+          <div class="qs-left">
+            <label class="qs-check-all-wrap" title="Select all">
+              <input type="checkbox" id="qs-check-all" class="qs-check-all">
+              <span class="qs-check-visual"></span>
+            </label>
+            <span id="qs-count" class="qs-count">0 selected</span>
+          </div>
+          <div class="qs-actions">
+            <button id="qs-add-playlist" class="qs-btn" title="Add to Playlist">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              <span data-i18n="context_menu.add_to_playlist">Add to Playlist</span>
+            </button>
+            <button id="qs-remove" class="qs-btn qs-btn-danger" title="Remove from Queue">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              <span data-i18n="context_menu.remove_from_queue">Remove</span>
+            </button>
+            <button id="qs-cancel" class="qs-btn qs-btn-ghost" title="Cancel">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              <span data-i18n="common.cancel">Cancel</span>
+            </button>
+          </div>
+        </div>
+
         <div id="queue-list" class="queue-list">
           <div class="queue-empty">
             <p data-i18n="queue.no_tracks">No tracks in queue</p>
@@ -452,6 +478,11 @@
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
         <span data-i18n="context_menu.remove_from_queue">Remove from Queue</span>
       </div>
+      <div id="ctx-separator-select" class="ctx-separator hidden"></div>
+      <div id="ctx-select" class="ctx-item hidden">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span data-i18n="context_menu.select">Select</span>
+      </div>
     </div>
 
     <!-- Permissions Panel -->
@@ -477,9 +508,12 @@
     <div id="lyrics-panel" class="lyrics-panel hidden">
       <div class="lyrics-backdrop"></div>
       <div class="lyrics-container">
-        <button id="lyrics-close" class="btn-icon lyrics-close-btn" title="Close" data-i18n-title="lyrics.close">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
+        <div class="lyrics-titlebar">
+          <span class="lyrics-titlebar-title">Lyrics</span>
+          <button id="lyrics-close" class="btn-icon lyrics-close-btn" title="Close" data-i18n-title="lyrics.close">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
         <div class="lyrics-track-header">
           <img id="lyrics-thumb" class="lyrics-album-art" src="" alt="">
           <div class="lyrics-track-meta">
@@ -557,6 +591,15 @@
           </div>
           <span class="theme-name">Windows 98</span>
         </button>
+        <button class="theme-option" data-theme="touchwiz">
+          <div class="theme-preview" style="border-radius: 4px; border: 1px solid #1a222e; background: #000;">
+            <span style="background: linear-gradient(to bottom, #647285, #3e4d61);"></span>
+            <span style="background: #1a222e"></span>
+            <span style="background: #33b5e5"></span>
+            <span style="background: #8cc63f"></span>
+          </div>
+          <span class="theme-name">TouchWiz</span>
+        </button>
       </div>
     </div>
   </div>
@@ -617,6 +660,7 @@
     </div>
   </div>
 
-      <script src="script.js?v=30"></script>
+      <script src="script.js?v=92"></script>
 </body>
 </html>
+
